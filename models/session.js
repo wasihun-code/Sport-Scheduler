@@ -7,20 +7,28 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
+      this.hasMany(models.PlayersName, {
+        foreignKey: 'sessionId',
+      });
     }
 
-    static async add_session({
+    static add_session({
       dueDate, venue, num_players,
     }) {
       return this.create({
         dueDate, venue, num_players,
+      });
+    }
+
+    static update_existing_session({ dueDate, venue, num_players, id}) {
+      return this.update({
+        dueDate, venue, num_players
+      }, {
+        where: {
+          id,
+        },
       });
     }
   }

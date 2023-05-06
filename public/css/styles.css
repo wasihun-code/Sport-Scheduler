@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(135, 93, 93);
+    background-color: rgb(216, 185, 185);
 }
 
 .players {
@@ -7,6 +7,7 @@ body {
     flex-direction: row;
     gap: 10px;
 }
+
 .player {
     border: 2px solid darkslategray;
     font-size: 20px;
@@ -14,7 +15,8 @@ body {
     margin-top: 30px;
     display: flex;
     flex-direction: row;
+    gap: 10px;
 }
 .delIcon {
-    margin-left: 20px;
+    margin-top: 10px;
 }
