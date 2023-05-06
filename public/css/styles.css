@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(135, 93, 93);
+}
+
+.players {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.player {
+    border: 2px solid darkslategray;
+    font-size: 20px;
+    padding: 10px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+.delIcon {
+    margin-left: 20px;
+}
