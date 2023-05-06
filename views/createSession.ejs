@@ -17,15 +17,15 @@
              <div class="col-start-3 col-span-2">
              <form action="/createSession" method="post">
                 <% if (sessionItem != null) { %>
-                    <p>Not Null</p>
-                <% } else { %>
-                    <p> Null </p>
+                    <input type="hidden" name="sessionId" value="<%= sessionItem.id %>">
                 <% } %>
-                 
                 
                 <div class="py-3">
                     <label>When will this sport session be held?</label>
-                    <input type="datetime-local" name="dueDate" class="border border-blue-300 rounded text-gray-900 w-full p-2">
+                    <input type="datetime-local" name="dueDate" class="border border-blue-300 rounded text-gray-900 w-full p-2" required
+                    <% if (sessionItem != null) { %>
+                        value="<%= new Date(sessionItem.dueDate).toISOString().slice(0, 16)  %>"
+                    <% } %>>
                 </div>
 
                 <div class="py-3">

@@ -34,7 +34,7 @@
             <% } %>
         </div>
         <a href="/createSession/<%= sessionItem.id %>">Edit Session</a>
-        <a href="/deleteSession">Delete Session</a>
+        <button type="reset" onclick="removeSession(<%= sessionItem.id %>)">Delete Session</button>
     </div>
     </div>
 
@@ -52,5 +52,19 @@
                 }
             }).catch((error) => console.log(error));
         }
+
+        function removeSession(sessionId) {
+            fetch(`/editSession/${sessionId}`, {
+                method: "delete",
+                headers: {
+                "Content-Type": "application/json"
+            },
+            }).then((res) => {
+                if (res.ok) {
+                    console.log("Session deleted successfully");
+                    window.location.href = '/';
+            }}).catch((error) => console.log(error));
+        }
+
     </script>
 </body>

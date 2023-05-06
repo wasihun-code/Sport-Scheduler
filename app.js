@@ -51,15 +51,18 @@ app.get('/createSession', (req, resp) => {
 app.post('/createSession', async (req, resp) => {
   try {
     let ses = null;
-    console.log(req.query.id);
-    if (req.query.id) {
-      const dueDate = new Date(req.body.dueDate);
-      console.log('YAY id is specified');
-      ses = await Session.update_existing_session({
+    console.log(req.body.sessionId);
+    const id = Number(req.body.sessionId);
+    const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
+    console.log(dueDate);
+
+    if (req.body.sessionId) {
+      console.log('YAY id is specifiied');
+      ses = await Session.update_exsting_session({
         dueDate,
         venue: req.body.venue,
         num_players: req.body.num_players,
-        id: req.query.id,
+        id,
       });
     } else {
       console.log('NO ID SPECIFIED');
@@ -105,6 +108,16 @@ app.delete('/editSession/:playerId', async (req, res) => {
   } catch (error) {
     console.log(error);
     return this.response.status(422).json(error);
+  }
+});
+
+app.delete('/editSession/:sessionId', async (req, res) => {
+  try {
+    await Session.remove_session(req.params.sessionId);
+    console.log('Removed');
+    res.render('index');
+  } catch (error) {
+    console.log(error);
   }
 });
 

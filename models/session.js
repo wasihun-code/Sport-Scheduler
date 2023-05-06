@@ -22,9 +22,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static update_existing_session({ dueDate, venue, num_players, id}) {
+    static async remove_session(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
+    static update_existing_session({
+      dueDate, venue, num_players, id,
+    }) {
       return this.update({
-        dueDate, venue, num_players
+        dueDate, venue, num_players,
       }, {
         where: {
           id,
