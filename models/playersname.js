@@ -30,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       await playersList.forEach((name) => {
         this.update({
           name,
-          sessionId,
+        }, {
+          where: {
+            sessionId,
+          },
         });
       });
     }

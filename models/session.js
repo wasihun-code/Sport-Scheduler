@@ -19,14 +19,15 @@ module.exports = (sequelize, DataTypes) => {
 
       this.hasMany(models.PlayersName, {
         foreignKey: 'sessionId',
+        onDelete: 'CASCADE',
       });
     }
 
     static add_session({
-      dueDate, venue, num_players,
+      dueDate, venue, num_players, sportId,
     }) {
       return this.create({
-        dueDate, venue, num_players,
+        dueDate, venue, num_players, sportId,
       });
     }
 
@@ -39,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static update_existing_session({
-      dueDate, venue, num_players, id,
+      dueDate, venue, num_players, sportId, id,
     }) {
       return this.update({
-        dueDate, venue, num_players,
+        dueDate, venue, num_players, sportId,
       }, {
         where: {
           id,

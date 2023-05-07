@@ -20,49 +20,32 @@ app.get('/', (_req, resp) => {
     title,
   });
 });
-
-app.get('/createSession/:id', async (req, resp) => {
-  try {
-    const sessionItem = await Session.findByPk(req.params.id);
-    const playersList = await PlayersName.findAll({
-      where: {
-        sessionId: sessionItem.id,
-      },
-    });
-    const players = playersList.map((player) => player.name).join(',');
-    resp.render('createSession', {
-      title: 'Edit Session',
-      sessionItem,
-      players,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.get('/createSession', async (req, resp) => {
+app.get('/sport/:sportId/createSession', async (req, resp) => {
+  const { sportId } = req.params;
   resp.render('createSession', {
     title: 'Create New Session',
     sessionItem: null,
     players: null,
+    sportId,
   });
 });
 
 app.post('/createSession', async (req, resp) => {
   try {
     let ses = null;
-    console.log(req.body.sessionId);
+
     const id = Number(req.body.sessionId);
     const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
-    const { sportId } = req.query;
-    const sport = await Sport.findByPk(sportId);
+
+    const sportId = Number(req.body.sportId); // Extract sportId from path
+    console.log('sportId inside post:', sportId);
 
     if (req.body.sessionId) {
       ses = await Session.update_exsting_session({
         dueDate,
         venue: req.body.venue,
         num_players: req.body.num_players,
-        sportId: sport.id,
+        sportId,
         id,
       });
       await PlayersName.update_players(req.body.players, ses.id);
@@ -71,7 +54,7 @@ app.post('/createSession', async (req, resp) => {
         dueDate: req.body.dueDate,
         venue: req.body.venue,
         num_players: req.body.num_players,
-        sportId: sport.id,
+        sportId,
       });
       await PlayersName.add_players(req.body.players, ses.id);
     }

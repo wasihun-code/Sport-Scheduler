@@ -20,7 +20,7 @@
                     <% if (sessionItem != null) { %>
                         <input type="hidden" name="sessionId" value="<%= sessionItem.id %>">
                     <% } %>
-                    <p><%= sport.id %></p>
+                    <input type="hidden" name="sportId" value="<%= sportId %>">
                     <div class="py-3">
                         <label>When will this sport session be held?</label>
                         <input type="datetime-local" name="dueDate" class="border border-blue-300 rounded text-gray-900 w-full p-2" 
