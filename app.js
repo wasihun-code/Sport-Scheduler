@@ -5,7 +5,7 @@ const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bodyParser = require('body-parser');
 // eslint-disable-next-line no-unused-vars
-const { Session, PlayersName } = require('./models');
+const { Session, PlayersName, Sport } = require('./models');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,7 +40,7 @@ app.get('/createSession/:id', async (req, resp) => {
   }
 });
 
-app.get('/createSession', (req, resp) => {
+app.get('/createSession', async (req, resp) => {
   resp.render('createSession', {
     title: 'Create New Session',
     sessionItem: null,
@@ -54,25 +54,27 @@ app.post('/createSession', async (req, resp) => {
     console.log(req.body.sessionId);
     const id = Number(req.body.sessionId);
     const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
-    console.log(dueDate);
+    const { sportId } = req.query;
+    const sport = await Sport.findByPk(sportId);
 
     if (req.body.sessionId) {
-      console.log('YAY id is specifiied');
       ses = await Session.update_exsting_session({
         dueDate,
         venue: req.body.venue,
         num_players: req.body.num_players,
+        sportId: sport.id,
         id,
       });
+      await PlayersName.update_players(req.body.players, ses.id);
     } else {
-      console.log('NO ID SPECIFIED');
       ses = await Session.add_session({
         dueDate: req.body.dueDate,
         venue: req.body.venue,
         num_players: req.body.num_players,
+        sportId: sport.id,
       });
+      await PlayersName.add_players(req.body.players, ses.id);
     }
-    await PlayersName.add_players(req.body.players, ses.id);
     resp.redirect('/');
   } catch (error) {
     console.log(error);
@@ -116,6 +118,28 @@ app.delete('/editSession/:sessionId', async (req, res) => {
     await Session.remove_session(req.params.sessionId);
     console.log('Removed');
     res.render('index');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get('/createSport', (req, resp) => {
+  resp.render('createSport', {
+    title: 'Create Sport',
+  });
+});
+
+app.get('/sport/:id', async (req, resp) => {
+  const sport = await Sport.findByPk(req.params.id);
+  resp.render('sport', {
+    sport,
+  });
+});
+
+app.post('/createSport', async (req, res) => {
+  try {
+    const sport = await Sport.create_sport(req.body.title);
+    res.redirect(302, `/sport/${sport.id}`);
   } catch (error) {
     console.log(error);
   }

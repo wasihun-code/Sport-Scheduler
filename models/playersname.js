@@ -5,19 +5,30 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class PlayersName extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-
+      this.belongsTo(models.Session, {
+        foreignKey: {
+          name: 'sessionId',
+          allowNull: false,
+          onDelete: 'CASCADE',
+        },
+      });
     }
 
     static async add_players(players, sessionId) {
       const playersList = players.trim().split(','); // ['Player 1', 'Player 2', 'Player 3', ....]
       await playersList.forEach((name) => {
         this.create({
+          name,
+          sessionId,
+        });
+      });
+    }
+
+    static async update_players(players, sessionId) {
+      const playersList = players.trim().split(','); // ['Player 1', 'Player 2', 'Player 3', ....]
+      await playersList.forEach((name) => {
+        this.update({
           name,
           sessionId,
         });

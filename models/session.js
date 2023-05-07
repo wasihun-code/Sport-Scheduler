@@ -9,6 +9,14 @@ module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     static associate(models) {
       // define association here
+      this.belongsTo(models.Sport, {
+        foreignKey: {
+          name: 'sportId',
+          allowNull: false,
+          onDelete: 'CASCADE',
+        },
+      });
+
       this.hasMany(models.PlayersName, {
         foreignKey: 'sessionId',
       });
@@ -46,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
     dueDate: DataTypes.DATE,
     venue: DataTypes.STRING,
     num_players: DataTypes.INTEGER,
+    sportId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Session',
