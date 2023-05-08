@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 const {
   Model,
@@ -26,16 +27,19 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async update_players(players, sessionId) {
+      await this.destroy({
+        where: {
+          sessionId,
+        },
+      });
       const playersList = players.trim().split(','); // ['Player 1', 'Player 2', 'Player 3', ....]
       await playersList.forEach((name) => {
-        this.update({
+        this.create({
           name,
-        }, {
-          where: {
-            sessionId,
-          },
+          sessionId,
         });
       });
+      console.log('Updating Successful');
     }
 
     static async remove_player(id) {

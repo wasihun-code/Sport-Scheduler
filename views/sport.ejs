@@ -8,16 +8,43 @@
         <title>
             <%= sport.title %>
         </title>
+        <style>
+            .session {
+                border: 2px solid black;
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+            }
+            .sessions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        </style>
         <script src="https://cdn.tailwindcss.com"></script>
-        <link href="./css/styles.css" rel="stylesheet">
     </head>
     <body>
             <div class= "grid  grid-cols-6">
              <div class="col-start-3 col-span-2">
                 <h1><%= sport.title %></h1>
                 <h2>Sessions</h2>
+                <% if (sessionItem.length)  { %>
+                <div class="sessions">
+                    <% for( let i = 0; i < sessionItem.length; i++ ) { %>
+                        <div class="session">
+                            <h1><%= sessionItem[i].venue %></h1>
+                            <h1><%= sessionItem[i].dueDate %></h1>
+                            <h1><%= sessionItem[i].num_players %></h1>
+                        </div>
+                    <% } %>
+                </div>
+                <% } else { %>
+                 <div>
+                    <p> No sessions available. Create Sessions and come back to these page</p>
+                 </div>
+                 <% } %>
                 <p></p>
-                <a href="/sport/<%= sport.id %>/createSession">Create New Session</a>
+                <a href="/sport/<%= sport.id %>/createSession/">Create New Session</a>
                 <a href="#">View Previous Sessions</a>
              </div>
             </div>

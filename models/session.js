@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
@@ -42,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     static update_existing_session({
       dueDate, venue, num_players, sportId, id,
     }) {
+      console.log('Update was successeful;');
       return this.update({
         dueDate, venue, num_players, sportId,
       }, {

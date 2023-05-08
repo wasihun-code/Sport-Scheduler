@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
     <title>
         <%= title %>
     </title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./css/styles.css" rel="stylesheet">
 
 </head>
 
@@ -24,7 +24,7 @@
             <% for (let player of playersList) { %> 
                 <div class="player">
                     <p> <%= player.name %> </p>
-                    <a href="#" class="delete-button" onclick="removePlayer(<%= player.id %>)">
+                    <a href="#" class="delete-button" onclick="removePlayer('<%= sportId %>', '<%= sessionItem.id %>','<%= player.id %>')">
                         <svg class="delIcon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16" height="16" viewBox="0 0 16 16">
                           <path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z">
                           </path>
@@ -33,14 +33,14 @@
                 </div>
             <% } %>
         </div>
-        <a href="/createSession/<%= sessionItem.id %>">Edit Session</a>
-        <button type="reset" onclick="removeSession(<%= sessionItem.id %>)">Delete Session</button>
+        <a href="/sport/<%= sportId %>/createSession/<%= sportId %>/">Edit Session</a>
+        <button type="reset" onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
     </div>
     </div>
 
     <script>
-        function removePlayer(playerId) {
-            fetch(`/editSession/${playerId}`, {
+        function removePlayer(sportId, sessionId, playerId) {
+            fetch(`/editSession/deletePlayer/${Number(playerId)}`, {
                 method: "delete",
                 headers: {
                     "Content-Type": "application/json"
@@ -48,21 +48,20 @@
             }).then((res) => {
                 if (res.ok) {
                     console.log("Delete OKkkkkkkkkkay")
-                    window.location.reload();
+                    window.location.href = `/sport/${Number(sportId)}/editSession/${Number(sessionId)}/`;
                 }
             }).catch((error) => console.log(error));
         }
 
-        function removeSession(sessionId) {
-            fetch(`/editSession/${sessionId}`, {
+        function removeSession(sportId, sessionId) {
+            fetch(`/editSession/deleteSession/${Number(sessionId)}`, {
                 method: "delete",
                 headers: {
                 "Content-Type": "application/json"
             },
             }).then((res) => {
                 if (res.ok) {
-                    console.log("Session deleted successfully");
-                    window.location.href = '/';
+                    window.location.href = `/sport/${Number(sportId)}/`;
             }}).catch((error) => console.log(error));
         }
 
