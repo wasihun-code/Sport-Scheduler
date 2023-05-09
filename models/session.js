@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     static update_existing_session({
       dueDate, venue, num_players, sportId, id,
     }) {
-      console.log('Update was successeful;');
+      console.log('Update was successful;');
       return this.update({
         dueDate, venue, num_players, sportId,
       }, {

@@ -4,7 +4,16 @@
     "password": "postgres",
     "database": "wd201_sport_scheduler",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "test_wd201_sport_scheduler",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false
   },
   "production": {
   }
