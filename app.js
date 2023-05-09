@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
 const express = require('express');
 const path = require('path');
@@ -16,12 +19,15 @@ const passport = require('passport');
 // eslint-disable-next-line no-unused-vars
 const connectEnsureLogin = require('connect-ensure-login');
 const session = require('express-session');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const flash = require('connect-flash');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const { User, Session, Sport, PlayersName } = require('./models');
+const {
+  User, Session, Sport, PlayersName,
+} = require('./models');
 
 // Passport Js Configuration
 app.use(flash());
@@ -36,6 +42,7 @@ app.use(
 );
 
 app.use((req, resp, next) => {
+  // eslint-disable-next-line no-param-reassign
   resp.locals.messages = req.flash();
   next();
 });
@@ -81,7 +88,6 @@ passport.deserializeUser((id, done) => {
       done(error, null);
     });
 });
-
 
 app.get('/', (_req, resp) => {
   const title = 'Sports Scheduler';
@@ -257,26 +263,25 @@ app.post(
   },
 );
 
-
 app.post('/users', async (req, resp) => {
   if (req.body.first_name.length === 0) {
-    req.flash('error', 'First name is required')
-    return resp.redirect('/signup')
+    req.flash('error', 'First name is required');
+    return resp.redirect('/signup');
   }
 
   if (req.body.last_name.length === 0) {
-    req.flash('error', 'Last name is required')
-    return resp.redirect('/signup')
+    req.flash('error', 'Last name is required');
+    return resp.redirect('/signup');
   }
 
   if (req.body.email.length === 0) {
-    req.flash('error', 'Email is required')
-    return resp.redirect('/signup')
+    req.flash('error', 'Email is required');
+    return resp.redirect('/signup');
   }
 
   if (req.body.password.length < 6) {
-    req.flash('error', 'Minimum password length is 6')
-    return resp.redirect('/signup')
+    req.flash('error', 'Minimum password length is 6');
+    return resp.redirect('/signup');
   }
 
   if (req.body.is_admin === 'Yes' && req.body.master_password < 10) {
@@ -289,8 +294,8 @@ app.post('/users', async (req, resp) => {
       is_admin = true;
     }
   }
-  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-  console.log(hashedPassword)
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  console.log(hashedPassword);
   try {
     const user = await User.create({
       first_name: req.body.first_name,
@@ -298,19 +303,19 @@ app.post('/users', async (req, resp) => {
       email: req.body.email,
       password: hashedPassword,
       is_admin,
-    })
+    });
     req.login(user, (err) => {
       if (err) {
-        console.log(err)
+        console.log(err);
       }
-      resp.redirect('/createSport')
-    })
+      resp.redirect('/createSport');
+    });
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
-      req.flash('error', 'Email already exists')
-      return resp.redirect('/signup')
+      req.flash('error', 'Email already exists');
+      return resp.redirect('/signup');
     }
   }
-})
+});
 
 module.exports = app;
