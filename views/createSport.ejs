@@ -1,35 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link href="./css/styles.css" rel="stylesheet">
-        <title>
-            <%= title %>
-        </title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="./css/styles.css" rel="stylesheet">
-    </head>
-    <body>
-            <div class= "grid  grid-cols-6">
-             <div class="col-start-3 col-span-2">
-                <h1> Create new sport </h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-                <form action="/createSport" method="post">
-                    
-                    <div class="py-3">
-                        <label>What is the sports name?</label>
-                        <input type="text" name="title" class="border border-blue-300 rounded text-gray-900 w-full p-2"
-                        required>
-                    </div>
+      body {
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+      }
 
-                    <div class="py-3">
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Submit</button>
-                    </div>
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
 
-                </form>
-             </div>
-            </div>
-</body>
+      .box {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 400px;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      form label {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      form input[type="text"] {
+        border: none;
+        border-radius: 3px;
+        font-size: 16px;
+        padding: 10px;
+        width: 100%;
+        background-color: #f5f5f5;
+        margin-bottom: 20px;
+      }
+
+      form input[type="text"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #4d90fe;
+      }
+
+      form button[type="submit"] {
+        background-color: #4d90fe;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition: all 0.2s ease;
+      }
+
+      form button[type="submit"]:hover {
+        background-color: #357ae8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <h1>Create New Sport</h1>
+        <form action="/createSport" method="post">
+          <div class="form-group">
+            <label>What is the sport's name?</label>
+            <input type="text" name="title" required />
+          </div>
+          <div class="form-group">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

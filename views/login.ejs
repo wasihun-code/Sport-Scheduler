@@ -1,32 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title><%= title %></title>
+    <style>
+      body {
+        background-color: #f1f1f1;
+      }
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link href="./css/styles.css" rel="stylesheet">
-    <title>
-        <%= title %>
-    </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="./css/styles.css" rel="stylesheet">
-</head>
-<body>
-<div class="grid grid-cols-6">
-    <div class="col-start-3 col-span-2">
-        <h6 class="py-4">Login</h6>
+      .grid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        width: 400px;
+      }
+
+      .container h6 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      .form-control {
+        margin-bottom: 20px;
+      }
+
+      .form-control label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .form-control input {
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        padding: 10px;
+        width: 100%;
+      }
+
+      .form-control input:focus {
+        border-color: #0b5ed7;
+        outline: none;
+      }
+
+      .btn {
+        background-color: #0b5ed7;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 10px;
+        width: 100%;
+      }
+
+      .btn:hover {
+        background-color: #0b5ed8;
+      }
+
+      /* additional styles for the login form */
+      label {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      button[type="submit"] {
+        background-color: #0b5ed7;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 10px;
+        width: 100%;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #0b5ed8;
+      }
+
+      h5 {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #f44336;
+        color: #fff;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="container">
+        <h6>Login</h6>
         <form action="/session" method="post">
-            <div class="py-3">
-                <label>Email:</label>
-                <input type="email" name="email" placeholder="abcd@email.com" class="border border-red-300 rounded text-gray-900 w-full p-2">
-            </div>
-            <div class="py-3">
-                <label>Password:</label>
-                <input type="password" name="password" placeholder="password" class="border border-red-300 rounded text-gray-900 w-full p-2" required>
-            </div>
-            <div class="py-3">
-                <button type="submit" class="bg-red-600 hover:bg-red-800 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Login</button>
+          <div class="form-control">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="abcd@email.com"
+            />
+          </div>
+          <div class="form-control">
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="password" required />
+          </div>
+          <div class="form-control">
+            <button type="submit" class="btn">Login</button>
             </div>
         </form>
         <% if(messages && messages.error && messages.error.length > 0)  { %>

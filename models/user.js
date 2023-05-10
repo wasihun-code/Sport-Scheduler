@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
 const {
   Model,
 } = require('sequelize');
@@ -13,7 +15,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    static add_user(first_name, last_name, email, password, is_admin) {
+      console.log('Inside create_user() : User is being created');
+      return this.create({
+        first_name,
+        last_name,
+        email,
+        password,
+        is_admin,
+      });
+    }
   }
+
   User.init({
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,

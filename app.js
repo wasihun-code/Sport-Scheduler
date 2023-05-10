@@ -111,7 +111,7 @@ app.get('/sport/:sportId/createSession/:sessionId', async (req, resp) => {
   const sessionItem = await Session.findByPk(req.params.sessionId);
   const playersList = await PlayersName.findAll({
     where: {
-      sessionId: sessionItem.id,
+      sessionId: req.params.sessionId,
     },
   });
   const players = playersList.map((player) => player.name).join(',');
@@ -295,15 +295,16 @@ app.post('/users', async (req, resp) => {
     }
   }
   const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-  console.log(hashedPassword);
   try {
-    const user = await User.create({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      password: hashedPassword,
+    const user = await User.add_user(
+      req.body.first_name,
+      req.body.last_name,
+      req.body.email,
+      hashedPassword,
       is_admin,
-    });
+    );
+    console.log('User Created:');
+    console.log('User Id', user.id);
     req.login(user, (err) => {
       if (err) {
         console.log(err);

@@ -8,34 +8,253 @@
     <title>
         <%= title %>
     </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="./css/styles.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7fafc;
+            font-family: "Helvetica Neue", sans-serif;
+        }
+        .container {
+            flex-direction: column;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            margin-left: 50px;
+            width: 30%;
+        }
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          grid-gap: 20px;
+        }
+        
+        .col-start-2 {
+          grid-column-start: 2;
+        }
+        
+        .col-span-2 {
+          grid-column-end: span 2;
+        }
+        
+        h1 {
+          margin-top: 0px;
+          font-size: 36px;
+          font-weight: bold;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        
+        h2 {
+          font-size: 24px;
+          font-weight: bold;
+          margin-top: 30px;
+          margin-bottom: 10px;
+        }
+        
+        h3 {
+          font-size: 18px;
+          font-weight: normal;
+          margin-top: 10px;
+          margin-bottom: 20px;
+        }
+        .players {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-direction: row;
+}
 
+.player {
+  flex: 0 0 auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-right: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+        
+        .player p {
+          font-size: 18px;
+          font-weight: bold;
+          margin: 0;
+          margin-right: 10px;
+        }
+        
+        .delete-button,
+        .edit-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #333333;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          text-decoration: none;
+          margin-left: auto;
+          transition: background-color 0.2s ease-in-out;
+        }
+        
+        .delete-button:hover,
+        .edit-button:hover {
+          background-color: #ff3333;
+          cursor: pointer;
+        }
+        
+        .editIcon,
+        .delIcon {
+          fill: white;
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+        }
+        
+        a {
+          display: inline-block;
+          background-color: #4caf50;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 4px;
+          text-decoration: none;
+          margin-top: 30px;
+          margin-right: 20px;
+          transition: background-color 0.2s ease-in-out;
+        }
+        
+        a:hover {
+          background-color: #3e8e41;
+          cursor: pointer;
+        }
+        
+        button {
+          display: inline-block;
+          background-color: #ff5555;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 4px;
+          border: none;
+          text-decoration: none;
+          margin-top: 30px;
+          transition: background-color 0.2s ease-in-out;
+        }
+        
+        button:hover {
+          background-color: #ff3333;
+          cursor: pointer;
+        }
+      
+        .session-header {
+          font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .session-schedule {
+            font-size: 18px;
+            font-weight: normal;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .sport-session {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            grid-column: 2 / span 4;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sport-session h2 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .sport-session .session-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .sport-session .session-info p {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+        
+        .sport-session .session-info span {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        .sport-session .buttons {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .sport-session .delete-button {
+            background-color: #ff3333;
+            margin-right: 10px;
+        }
+        
+        .sport-session .delete-button:hover {
+            background-color: #b30000;
+        }
+        
+        .sport-session .edit-button {
+            background-color: #333333;
+            margin-left: 10px;
+        }
+        
+        .sport-session .edit-button:hover {
+            background-color: #1a1a1a;
+        }
+
+    </style>        
+    
 </head>
 
-<body>
-    <div class= "grid  grid-cols-6">
-    <div class="col-start-2 col-span-2">
-        <h1> SPORT Session #1 </h1>
-        <h3> This session is scheduled for "<%= sessionItem.dueDate %>" , 
-            to be played at "<%= sessionItem.venue %>" </h3>
-        <h2>Players</h2>
-        <div class="players">
-            <% for (let player of playersList) { %> 
-                <div class="player">
-                    <p> <%= player.name %> </p>
-                    <a href="#" class="delete-button" onclick="removePlayer('<%= sportId %>', '<%= sessionItem.id %>','<%= player.id %>')">
-                        <svg class="delIcon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16" height="16" viewBox="0 0 16 16">
-                          <path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z">
-                          </path>
-                        </svg>
-                    </a>
-                </div>
-            <% } %>
+<body>    
+    <div class="container">
+        <div class="heading">
+            <h1> SPORT Session #1 </h1>
+            <h3> This session is scheduled for "<%= sessionItem.dueDate %>" , 
+                to be played at "<%= sessionItem.venue %>" </h3>
         </div>
-        <a href="/sport/<%= sportId %>/createSession/<%= sportId %>/">Edit Session</a>
-        <button type="reset" onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
-    </div>
+            <h2>Players</h2>
+            <div class="players">
+                <% for (let player of playersList) { %> 
+                    <div class="player">
+                        <p> <%= player.name %> </p>
+                        <a href="#" id="delete-player-button" onclick="removePlayer('<%= sportId %>', '<%= sessionItem.id %>','<%= player.id %>')">
+                            <svg class="delIcon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16" height="16" viewBox="0 0 16 16">
+                                <path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+            <a href="/sport/<%= sportId %>/createSession/<%= sportId %>/">Edit Session</a>
+            <button id="delete-session-button" type="reset" onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
     </div>
 
     <script>
@@ -67,3 +286,4 @@
 
     </script>
 </body>
+</html>

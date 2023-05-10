@@ -5,69 +5,122 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link href="./css/styles.css" rel="stylesheet">
     <title>
         <%= title %>
     </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="./css/styles.css" rel="stylesheet">
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+        }
+    
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          max-width: 500px;
+          width: 100%;
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+        }
+    
+        label {
+          font-weight: bold;
+        }
+    
+        input, select {
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 10px;
+          font-size: 1rem;
+          color: #555;
+          outline: none;
+        }
+    
+        button {
+          background-color: #f44336;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          padding: 10px;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+    
+        button:hover {
+          background-color: #e53935;
+        }
+    
+        .error {
+          display: inline-block;
+          padding: 5px 10px;
+          border-radius: 5px;
+          background-color: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+          margin: 10px 0;
+        }
+      </style>
 </head>
 <body>
-<div class="grid grid-cols-6">
-    <div class="col-start-3 col-span-2">
-        <h6 class="py-4">Signup as a new user</h6>
+    <div class="container">
+      <form action="/users" method="post" class="form">
+        <h2 class="form-title">Signup as a new user</h2>
         <% if(messages && messages.error && messages.error.length > 0)  { %>
-            <% for(var i=0; i<messages.error.length; i++) { %>
-                <h5 class="inline-block px-2 py-1 mx-2 my-1 rounded bg-red-200 text-red-600 border border-red-400">
-                    <%= messages.error[i] %>
-                </h5>
-            <% } %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+            <p class="form-error"><%= messages.error[i] %></p>
+          <% } %>
         <% } %>
-        <form action="/users" method="post">
-            <div class="py-3">
-                <label>FirstName:</label>
-                <input type="text" name="first_name" placeholder="FirstName" class="border border-red-300 rounded text-gray-900 w-full p-2">
-            </div>
-            <div class="py-3">
-                <label>LastName:</label>
-                <input type="text" name="last_name" placeholder="lastName" class="border border-red-300 rounded text-gray-900 w-full p-2" required >
-            </div>
-            <div class="py-3">
-                <label>Email:</label>
-                <input type="email" name="email" placeholder="abcd@email.com" class="border border-red-300 rounded text-gray-900 w-full p-2" required>
-            </div>
-            <div class="py-3">
-                <label>Password:</label>
-                <input type="password" name="password" placeholder="password" class="border border-red-300 rounded text-gray-900 w-full p-2">
-            </div>
-            <div class="py-3">
-                <label for="selectField">Are You an Admin:</label>
-                <select id="selectField">
-                    <option value="option1" name="is_admin">No</option>
-                    <option value="option2">Yes</option>
-                </select>
-            </div>
-            <div class="py-3" id="inputFieldWrapper">
-                <label for="inputField">Enter master password</label>
-                <input  id="inputField" type="password" name="master_password" placeholder="master password" class="border border-red-300 rounded text-gray-900 w-full p-2">
-            </div>
-            <div class="py-3">
-                <button type="submit" class="bg-red-600 hover:bg-red-800 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Sign up</button>
-            </div>
-        </form>
-    </div>
-</div>
+        <div class="form-group">
+          <label for="first_name">First Name:</label>
+          <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+        </div>
+        <div class="form-group">
+          <label for="last_name">Last Name:</label>
+          <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="is_admin">Are You an Admin:</label>
+          <select class="selectField" id="is_admin" name="is_admin">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+        <div class="form-group inputFieldWrapper" id="master_password_field">
+          <label for="master_password">Enter master password:</label>
+          <input type="password" name="master_password" id="master_password" placeholder="Master Password">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="form-submit">Sign up</button>
+        </div>
+      </form>
+    </div>  
+  
 <script>
   // Get references to the select field and the input field wrapper
-  const selectField = document.querySelector('#selectField');
-  const inputFieldWrapper = document.querySelector('#inputFieldWrapper');
+  const selectField = document.querySelector('.selectField');
+  const inputFieldWrapper = document.querySelector('.inputFieldWrapper');
 
   // Hide the input field by default
   inputFieldWrapper.style.display = 'none';
 
   // Show or hide the input field when the dropdown value changes
   selectField.addEventListener('change', function() {
-    if (selectField.value === 'option2') {
+    if (selectField.value === 'yes') {
       inputFieldWrapper.style.display = 'block';
     } else {
       inputFieldWrapper.style.display = 'none';
