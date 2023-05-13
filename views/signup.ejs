@@ -8,7 +8,11 @@
     <title>
         <%= title %>
     </title>
-    <style>
+    <head>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-lRnBHszL7m9CJlLyT6Fz0pXsZsVGX6bqqDILrV9Ov+gZ2jrMI7afQgLWBEfgoOtJ" crossorigin="anonymous">
+        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-lviT1QCleBc5NgrFqNwGokwdFgH6vFE9ckh/sFp+TNdZCTO9tv5IBV1Zl3wU2p8X" crossorigin="anonymous"></script>
+      </head>      
+    <!-- <style>
         body {
           margin: 0;
           padding: 0;
@@ -66,49 +70,221 @@
           border: 1px solid #f5c6cb;
           margin: 10px 0;
         }
-      </style>
+    </style> -->
+    <style>
+                html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+        .background {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 35%;
+            gap: 40px;
+            background-color: #A0D8B3;
+            color: white;
+        }
+
+        .register-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65%;
+        }
+
+        .background-heading {
+            font-size: 50px;
+        }
+        .background-text {
+            width: 60%;
+            text-align: center;
+            font-size: larger;
+        }
+        .button-submit {
+            padding: 20px;
+            border-radius: 20px;
+            width: 50%;
+            background-color: #A0D8B3;
+            border: 1px solid white;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            text-decoration: none;
+        }
+
+        input, .selectField {
+            width: 300px;
+            height: 35px;
+            border: 2px solid lightgrey;
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
+        input::placeholder {
+            padding: 15px;
+        }
+        input:focus {
+            border: 2px solid rgb(189, 26, 26);
+            outline: none;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .form-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 20px;
+            width: 80%;
+            margin: auto;
+            background-color: #99A98F;
+            border: 1px solid white;
+            color: white;
+        }
+        .form-submit:hover {
+            cursor: pointer;
+        }
+        .form-title {
+            color: #A0D8B3;
+            font-size: 35px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bolder;
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 10px;
+        }
+
+        .social-buttons img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: #AAC8A7;
+            color: white;
+            font-size: 20px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            margin-bottom: -30px;
+            margin-top: -20px;
+        }
+
+        .social-buttons button:hover {
+            transform: scale(1.2);
+        }
+        .errors {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 20px;
+            width: 80%;
+            color: #E76161;
+            /* margin-bottom: ; */
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-      <form action="/users" method="post" class="form">
-        <h2 class="form-title">Signup as a new user</h2>
-        <% if(messages && messages.error && messages.error.length > 0)  { %>
-          <% for(var i=0; i<messages.error.length; i++) { %>
-            <p class="form-error"><%= messages.error[i] %></p>
-          <% } %>
-        <% } %>
-        <div class="form-group">
-          <label for="first_name">First Name:</label>
-          <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+        <div class="background">
+          <h1 class="background-heading">Welcome Aboard!</h1>
+          <p class="background-text"> To keep connected with us please login with your personal info.</p>
+          <a href="/login" type="submit" class="button-submit">Sign in</a>
         </div>
-        <div class="form-group">
-          <label for="last_name">Last Name:</label>
-          <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+        <div class="register-form">
+            <form action="/users" method="post" class="form">
+              <h2 class="form-title">Create Account</h2>
+              <div class="social-buttons">
+                <a href=""><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></a>
+                <a href=""><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/640px-Facebook_f_logo_%282019%29.svg.png"/></a>
+              </div>
+              <div class="errors">   
+                <% if(messages && messages.error && messages.error.length > 0)  { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <p class="form-error"><%= messages.error[i] %></p>
+                    <% } %>
+                <% } %>
+                </div>
+              <div class="form-group">
+                <input type="text" name="first_name" placeholder="First Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" name="last_name" placeholder="Last Name" required>
+              </div>
+              <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required>
+              </div>
+              <div class="form-group">
+                <input type="password" name="password" placeholder="Password">
+              </div>
+              <div class="form-group">
+                  <label>Are you an admin?</label>
+                  <select class="selectField" name="is_admin">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+              </div>
+              <div class="form-group inputFieldWrapper" id="master_password_field">
+                <input type="password" name="master_password" placeholder="Master Password">
+              </div>
+              <div class="form-group">
+                <button type="submit" class="form-submit">Sign up</button>
+              </div>
+            </form>
         </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" name="email" id="email" placeholder="Email" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-          <label for="is_admin">Are You an Admin:</label>
-          <select class="selectField" id="is_admin" name="is_admin">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </div>
-        <div class="form-group inputFieldWrapper" id="master_password_field">
-          <label for="master_password">Enter master password:</label>
-          <input type="password" name="master_password" id="master_password" placeholder="Master Password">
-        </div>
-        <div class="form-group">
-          <button type="submit" class="form-submit">Sign up</button>
-        </div>
-      </form>
-    </div>  
+      </div>
+      
   
 <script>
   // Get references to the select field and the input field wrapper

@@ -72,7 +72,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="/createSession" method="post">
+        <form action="/sport/<%= sportId %>/createSession" method="post">
             <% if (sessionItem != null) { %>
                 <input type="hidden" name="sessionId" value="<%= sessionItem.id %>">
             <% } %>

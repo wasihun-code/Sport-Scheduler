@@ -25,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static add_session({
-      dueDate, venue, num_players, sportId,
+      dueDate, venue, num_players, sportId, userId,
     }) {
       return this.create({
-        dueDate, venue, num_players, sportId,
+        dueDate, venue, num_players, sportId, userId,
       });
     }
 
@@ -41,11 +41,10 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static update_existing_session({
-      dueDate, venue, num_players, sportId, id,
+      dueDate, venue, num_players, sportId, userId, id,
     }) {
-      console.log('Update was successful;');
       return this.update({
-        dueDate, venue, num_players, sportId,
+        dueDate, venue, num_players, sportId, userId,
       }, {
         where: {
           id,
@@ -60,6 +59,18 @@ module.exports = (sequelize, DataTypes) => {
     sportId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Sport',
+        key: 'id',
+      },
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
     },
   }, {
     sequelize,

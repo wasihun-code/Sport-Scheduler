@@ -6,133 +6,268 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title><%= title %></title>
     <style>
-      body {
-        background-color: #f1f1f1;
-      }
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        body {
+            height: 95vh;
+            background: #AAC8A7;
+        }
 
-      .grid {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-size: larger;
+        }
+        .header-links {
+            display: flex;
+            justify-content: space-evenly;
+            gap: 10px;
+            font-size: larger;
+            font-weight: 540;
 
-      .container {
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        padding: 40px;
-        width: 400px;
-      }
+        }
 
-      .container h6 {
-        font-size: 22px;
-        margin-bottom: 20px;
-      }
+        .header-logo {
+            font-size: larger;
+        }
 
-      .form-control {
-        margin-bottom: 20px;
-      }
+        .main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            border-radius: 30px;
+            width: 30%;
+            margin: auto;
+            background: white;
+            margin-bottom: -20px;
+        }
 
-      .form-control label {
-        display: block;
-        font-size: 14px;
-        margin-bottom: 5px;
-      }
+        .login-header {
+            text-align: center;
+            margin-top: 20px;
+            width: 60%;
+            font-size: 20px;
+        }
+        .heading {
+            font-weight: bolder;
+        }
+        h1 {
+            font-size: xx-large;
+            margin-bottom: 20px;
+        }
 
-      .form-control input {
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
-      }
+        .social-buttons {
+            display: flex;
+            justify-content: space-evenly;
+        }
 
-      .form-control input:focus {
-        border-color: #0b5ed7;
-        outline: none;
-      }
+        .button-submit {
+            width: 100%;
+            border-radius: 12px;
+            padding: 10px;;
+            font-size: medium;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            background-color: #F6C391;
+            border: none;
+        }
 
-      .btn {
-        background-color: #0b5ed7;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
-      }
+        input {
+            width: 300px;
+            height: 35px;
+            border: 2px solid lightgrey;
+            margin-bottom: 20px;
+            border-radius: 12px;
 
-      .btn:hover {
-        background-color: #0b5ed8;
-      }
+        }
+        input::placeholder {
+            padding: 15px;
+        }
+        input:focus {
+            border: 2px solid rgb(189, 26, 26);
+            outline: none;
+        }
+        .register-text {
+            margin-bottom: 20px;
+        }
+        footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .trouble-text {
+            font-weight: 900;
+            font-size: small;
+        }
+        .or-text {
+            text-align: center;
+            /* margin: 10px; */
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 20px;
+        }
 
-      /* additional styles for the login form */
-      label {
-        display: block;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
+        a {
+            text-decoration: none;
+            color: #0A4D68;
+        }
 
-      button[type="submit"] {
-        background-color: #0b5ed7;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
-      }
+        /* additional styles for main section */
+        .main {
+          box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
 
-      button[type="submit"]:hover {
-        background-color: #0b5ed8;
-      }
+        /* additional styles for social buttons */
 
-      h5 {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 5px;
-        font-size: 16px;
-        font-weight: bold;
-        background-color: #f44336;
-        color: #fff;
-        border-radius: 5px;
-      }
+        .social-buttons img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: #AAC8A7;
+            color: white;
+            font-size: 20px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            margin-bottom: -20px;
+        }
+
+        .social-buttons button:hover {
+            transform: scale(1.2);
+        }
+
+        /* additional styles for register text */
+        .register-text a {
+            color: #9E6F21;
+            font-weight: bold;
+        }
+
+        .register-text a:hover {
+           text-decoration: underline;
+        }
+        .form {
+            margin-top: -40px;
+        }
+        /* additional styles for footer */
+        footer {
+            background-color: #AAC8A7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* additional styles for trouble text */
+        .trouble-text a {
+            color: #9E6F21;
+            font-weight: bold;
+        }
+
+        .trouble-text a:hover {
+          text-decoration: underline;
+        }
+        .errors {
+            /* margin-top: px; */
+            width: 70%;
+            color: #E76161;
+            margin-bottom: 20px;
+            margin-top: -15px;
+        }
     </style>
-  </head>
-  <body>
-    <div class="grid">
-      <div class="container">
-        <h6>Login</h6>
-        <form action="/session" method="post">
-          <div class="form-control">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="abcd@email.com"
-            />
-          </div>
-          <div class="form-control">
-            <label>Password:</label>
-            <input type="password" name="password" placeholder="password" required />
-          </div>
-          <div class="form-control">
-            <button type="submit" class="btn">Login</button>
+</head>
+<body>
+    <header class="header">
+        <div class="header-logo">Sport Scheduler</div>
+        <div class="header-links">
+          <a href="/login" class="header-link-signup">Log in</a>
+          <a href="/signup" class="header-link-signup">Sign up</a>
+          <a href="#" class="header-link-about">About us</a>
+          <a href="#" class="header-link-signup">Contact</a>
+        </div>
+      </header>
+      
+      <main class="main">
+          <div class="login-header">
+              <h1 class="heading">Login</h1>
+              <p class="description">Enter your details to get signed in </p>
             </div>
-        </form>
-        <% if(messages && messages.error && messages.error.length > 0)  { %>
-            <% for(var i=0; i<messages.error.length; i++) { %>
-                <h5 class="inline-block px-2 py-1 mx-2 my-1 rounded bg-red-200 text-red-600 border border-red-400">
-                    <%= messages.error[i] %>
-                </h5>
-            <% } %>
-        <% } %>
-    </div>
-</div>
+            <div class="errors">
+                <% if(messages && messages.error && messages.error.length > 0)  { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <h5 class="inline-block px-2 py-1 mx-2 my-1 rounded bg-red-200 text-red-600 border border-red-400">
+                            <%= messages.error[i] %>
+                        </h5>
+                    <% } %>
+                <% } %>
+            </div>
+            <form action="/session" method="post" class="form">
+            <div class="form-group">
+              <input type="email" id="email" name="email" placeholder="Enter email" class="form-group-input" required>
+            </div>
+            <div class="form-group">
+              <input type="password" id="password" name="password" placeholder="Enter password" class="form-group-input password-input" required>
+            </div>
+            <a href="#" class="trouble-text">Having trouble signing in?</a>
+            <button type="submit" class="button-submit">Submit</button>
+            <p class="or-text">-- Or sign in with --</p>
+            <div class="social-buttons">
+              <a href=""><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></a>
+              <a href=""><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/640px-Facebook_f_logo_%282019%29.svg.png"/></a>
+            </div>
+          </form>
+
+          <p class="register-text">Don't have an account? <a href="/signup">Register</a></p>
+        </main>
+        <footer class="footer">
+            <p class="footer-copyright">&copy; Copyright 2023 | Privacy Policy </p>
+          </footer>
+      
 </body>
 </html>

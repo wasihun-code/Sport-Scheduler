@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 const {
-  Model,
+  Model, or,
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async add_players(players, sessionId) {
+    static async add_players(players, organizer, sessionId) {
       const playersList = players.trim().split(','); // ['Player 1', 'Player 2', 'Player 3', ....]
       await playersList.forEach((name) => {
         this.create({
@@ -24,9 +24,13 @@ module.exports = (sequelize, DataTypes) => {
           sessionId,
         });
       });
+      this.create({
+        name: organizer,
+        sessionId,
+      });
     }
 
-    static async update_players(players, sessionId) {
+    static async update_players(players, organizer, sessionId) {
       await this.destroy({
         where: {
           sessionId,
@@ -39,7 +43,10 @@ module.exports = (sequelize, DataTypes) => {
           sessionId,
         });
       });
-      console.log('Updating Successful');
+      this.create({
+        name: organizer,
+        sessionId,
+      });
     }
 
     static async remove_player(id) {

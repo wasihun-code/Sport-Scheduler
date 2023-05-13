@@ -10,15 +10,24 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static create_sport(title) {
+    static create_sport(title, adminId) {
       return this.create({
         title,
+        adminId,
       });
     }
   }
 
   Sport.init({
     title: DataTypes.STRING,
+    adminId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Sport',
+        key: 'id',
+      },
+    },
   }, {
     sequelize,
     modelName: 'Sport',

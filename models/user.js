@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static add_user(first_name, last_name, email, password, is_admin) {
-      console.log('Inside create_user() : User is being created');
       return this.create({
         first_name,
         last_name,

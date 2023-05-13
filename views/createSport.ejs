@@ -6,90 +6,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
 
-      body {
-        background-color: #f9f9f9;
-        font-family: Arial, sans-serif;
-      }
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+        .background {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 35%;
+            gap: 25px;
+            /* background-color: #A0D8B3; */
+            color: white;
+            /* background-image: url(<%= `img/sport-background-${1+0}.jpg` %>); */
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
 
-      .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+        .sport-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 50px;
+            width: 65%;
+        }
 
-      .box {
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        width: 400px;
-      }
+        .background-text {
+            width: 60%;
+            text-align: center;
+            font-size: larger;
+        }
 
-      h1 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-align: center;
-      }
+        .button-submit {
+            padding: 10px;
+            border-radius: 20px;
+            width: 50%;
+            background-color: #A0D8B3;
+            border: 1px solid white;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            text-decoration: none;
+        }
+        .form-title {
+            color: #A0D8B3;
+            font-size: 35px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bolder;
+        }
+        input, .selectField {
+            width: 300px;
+            height: 35px;
+            border: 2px solid lightgrey;
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
+        input::placeholder {
+            padding: 15px;
+        }
+        input:focus {
+            border: 2px solid rgb(189, 26, 26);
+            outline: none;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .quote-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            }
 
-      form label {
-        display: block;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
+            .author {
+                font-size: 1.2rem;
+                font-style: italic;
+                margin-bottom: 10px;
+            }
 
-      form input[type="text"] {
-        border: none;
-        border-radius: 3px;
-        font-size: 16px;
-        padding: 10px;
-        width: 100%;
-        background-color: #f5f5f5;
-        margin-bottom: 20px;
-      }
+            .quote {
+                font-size: 1.5rem;
+                text-align: center;
+                line-height: 1.5;
+            }
+            .quote {
+                font-size: 24px;
+                line-height: 1.5;
+                font-style: italic;
+                padding: 20px;
+                margin: 20px;
+                border-left: 5px solid #ccc;
+            }
 
-      form input[type="text"]:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px #4d90fe;
-      }
+            .quote:before {
+                content: "\201C"; /* opening quotation mark */
+                font-size: 48px;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
 
-      form button[type="submit"] {
-        background-color: #4d90fe;
-        border: none;
-        border-radius: 3px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 10px 20px;
-        transition: all 0.2s ease;
-      }
+            .quote:after {
+                content: "\201D"; /* closing quotation mark */
+                font-size: 48px;
+                margin-left: 10px;
+                vertical-align: middle;
+            }
 
-      form button[type="submit"]:hover {
-        background-color: #357ae8;
-      }
+
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="box">
-        <h1>Create New Sport</h1>
-        <form action="/createSport" method="post">
-          <div class="form-group">
-            <label>What is the sport's name?</label>
-            <input type="text" name="title" required />
-          </div>
-          <div class="form-group">
-            <button type="submit">Submit</button>
-          </div>
-        </form>
+        <div class="background">
+        </div>
+        <div class="sport-form">
+            <form action="/createSport" method="post">
+                <h2 class="form-title">Create Sport</h2>
+                <div class="form-group">
+                    <label>What is the sport's name?</label>
+                    <input type="text" name="title" required />
+                </div>
+                <div class="form-group">
+                    <button class="button-submit" type="submit">Create</button>
+                </div>
+            </form>
+        <div class="quote-wrapper">
+            <div class="author">
+                <%= quotes[Math.floor(Math.random() * quotes.length)].author %>
+            </div%>
+            <div class="quote">
+                <%= quotes[Math.floor(Math.random() * quotes.length)].quote %>
+            </div%>
+        </div>    
       </div>
     </div>
   </body>

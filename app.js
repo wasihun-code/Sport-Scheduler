@@ -29,15 +29,110 @@ const {
   User, Session, Sport, PlayersName,
 } = require('./models');
 
+const sportsQuotes = [
+  {
+    quote: "Winning isn't everything, it's the only thing.",
+    author: 'Vince Lombardi',
+  },
+  {
+    quote: "It's not the will to win that matters—everyone has that. It's the will to prepare to win that matters.",
+    author: "Paul 'Bear' Bryant",
+  },
+  {
+    quote: "The difference between the impossible and the possible lies in a man's determination.",
+    author: 'Tommy Lasorda',
+  },
+  {
+    quote: "The only way to prove that you're a good sport is to lose.",
+    author: 'Ernie Banks',
+  },
+  {
+    quote: 'The more difficult the victory, the greater the happiness in winning.',
+    author: 'Pele',
+  },
+  {
+    quote: 'Champions keep playing until they get it right.',
+    author: 'Billie Jean King',
+  },
+  {
+    quote: "You miss 100% of the shots you don't take.",
+    author: 'Wayne Gretzky',
+  },
+  {
+    quote: "If you don't have confidence, you'll always find a way not to win.",
+    author: 'Carl Lewis',
+  },
+  {
+    quote: "It ain't over till it's over.",
+    author: 'Yogi Berra',
+  },
+  {
+    quote: "You can't put a limit on anything. The more you dream, the farther you get.",
+    author: 'Michael Phelps',
+  },
+  {
+    quote: "Gold medals aren't really made of gold. They're made of sweat, determination, and a hard-to-find alloy called guts.",
+    author: 'Dan Gable',
+  },
+  {
+    quote: "When you've got something to prove, there's nothing greater than a challenge.",
+    author: 'Terry Bradshaw',
+  },
+  {
+    quote: 'The more I practice, the luckier I get.',
+    author: 'Gary Player',
+  },
+  {
+    quote: "It's not whether you get knocked down; it's whether you get up.",
+    author: 'Vince Lombardi',
+  },
+  {
+    quote: 'Persistence can change failure into extraordinary achievement.',
+    author: 'Marv Levy',
+  },
+  {
+    quote: "You can't climb the ladder of success with your hands in your pockets.",
+    author: 'Arnold Schwarzenegger',
+  },
+  {
+    quote: 'If you want to go fast, go alone. If you want to go far, go together.',
+    author: 'African proverb',
+  },
+  {
+    quote: "I've failed over and over and over again in my life and that is why I succeed.",
+    author: 'Michael Jordan',
+  },
+  {
+    quote: 'Never say never because limits, like fears, are often just an illusion.',
+    author: 'Michael Jordan',
+  },
+  {
+    quote: 'The pain you feel today will be the strength you feel tomorrow.',
+    author: 'Arnold Schwarzenegger',
+  },
+  {
+    quote: 'The greatest glory in living lies not in never falling, but in rising every time we fall.',
+    author: 'Nelson Mandela',
+  },
+  {
+    quote: 'Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.',
+    author: 'Pele',
+  },
+  {
+    quote: 'The man who has no imagination has no wings.',
+    author: 'Muhammad Ali',
+  },
+];
+
 // Passport Js Configuration
 app.use(flash());
 
 app.use(
   session({
     secret: 'my-super-secret-key-187657654765423456788',
-    cookies: {
-      maxAge: 24 * 60 * 60 * 1000,
-    },
+    resave: true,
+    saveUninitialized: false,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
   }),
 );
 
@@ -64,18 +159,17 @@ passport.use(
             return done(null, user);
           }
           return done(null, false, {
-            message: 'Try again with a correct password',
+            message: 'Invalid email or password',
           });
         })
         .catch(() => done(null, false, {
-          message: 'No account found with this email. Please create new account',
+          message: 'Invalid email or password',
         }));
     },
   ),
 );
 
 passport.serializeUser((user, done) => {
-  console.log('Serializing user in session', user.id);
   done(null, user.id);
 });
 
@@ -89,179 +183,11 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-app.get('/', (_req, resp) => {
-  const title = 'Sports Scheduler';
-  resp.render('index', {
-    title,
-  });
-});
-
-app.get('/sport/:sportId/createSession', async (req, res) => {
-  res.render('createSession', {
-    title: 'Create New Session',
-    sessionItem: null,
-    players: null,
-    sportId: req.params.sportId,
-  });
-});
-
-app.get('/sport/:sportId/createSession/:sessionId', async (req, resp) => {
-  const { sportId } = req.params;
-
-  const sessionItem = await Session.findByPk(req.params.sessionId);
-  const playersList = await PlayersName.findAll({
-    where: {
-      sessionId: req.params.sessionId,
-    },
-  });
-  const players = playersList.map((player) => player.name).join(',');
-  resp.render('createSession', {
-    title: 'Create New Session',
-    sessionItem,
-    players,
-    sportId,
-  });
-});
-
-app.post('/createSession', async (req, resp) => {
-  try {
-    let ses;
-
-    const id = Number(req.body.sessionId);
-    const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
-
-    const sportId = Number(req.body.sportId); // Extract sportId from path
-    console.log('sportId inside post:', sportId);
-
-    if (req.body.sessionId) {
-      await Session.update_existing_session({
-        dueDate,
-        venue: req.body.venue,
-        num_players: req.body.num_players,
-        sportId,
-        id,
-      });
-      await PlayersName.update_players(req.body.players, id);
-      resp.redirect(`/sport/${sportId}/editSession/${id}`);
-      console.log('After Updating: ', id);
-      console.log('type of id', typeof (id));
-    } else {
-      ses = await Session.add_session({
-        dueDate: req.body.dueDate,
-        venue: req.body.venue,
-        num_players: req.body.num_players,
-        sportId,
-      });
-      await PlayersName.add_players(req.body.players, ses.id);
-      resp.redirect(`/sport/${sportId}/editSession/${ses.id}`);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.get('/sport/:sportId/editSession/:sessionId', async (req, resp) => {
-  const title = 'Edit Session';
-  try {
-    const sportId = Number(req.params.sportId);
-    console.log('sportId inside listing players page', sportId);
-    const sessionItem = await Session.findByPk(req.params.sessionId);
-    const playersList = await PlayersName.findAll({
-      where: {
-        sessionId: sessionItem.id,
-      },
-    });
-
-    resp.render('editSession', {
-      title,
-      sessionItem,
-      playersList,
-      sportId,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-// eslint-disable-next-line no-unused-vars
-app.delete('/editSession/deletePlayer/:playerId', async (req, res) => {
-  try {
-    await PlayersName.remove_player(req.params.playerId);
-    res.render('index');
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.delete('/editSession/deleteSession/:sessionId', async (req, res) => {
-  try {
-    await Session.remove_session(req.params.sessionId);
-    console.log('Removed');
-    res.render('index');
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-app.get('/createSport', (req, resp) => {
-  resp.render('createSport', {
-    title: 'Create Sport',
-  });
-});
-
-app.get('/sport/:id', async (req, resp) => {
-  const sport = await Sport.findByPk(req.params.id);
-  const sessionItem = await Session.findAll({
-    where: {
-      sportId: sport.id,
-    },
-  });
-  resp.render('sport', {
-    sport,
-    sessionItem,
-  });
-});
-
-app.post('/createSport', async (req, res) => {
-  try {
-    const sport = await Sport.create_sport(req.body.title);
-    res.redirect(302, `/sport/${sport.id}`);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 app.get('/signup', (request, response) => {
   response.render('signup', {
     title: 'Signup',
   });
 });
-
-app.get('/signout', (req, resp, next) => {
-  req.logout((error) => {
-    if (error) {
-      return next(error);
-    }
-    resp.redirect('/');
-  });
-});
-
-app.get('/login', (req, resp) => {
-  resp.render('login', { title: 'Login' });
-});
-
-app.post(
-  '/session',
-  passport.authenticate('local', {
-    failureRedirect: '/login',
-    failureFlash: true,
-  }),
-  (req, resp) => {
-    console.log(req.user);
-    resp.redirect('/createSport');
-  },
-);
 
 app.post('/users', async (req, resp) => {
   if (req.body.first_name.length === 0) {
@@ -284,8 +210,8 @@ app.post('/users', async (req, resp) => {
     return resp.redirect('/signup');
   }
 
-  if (req.body.is_admin === 'Yes' && req.body.master_password < 10) {
-    req.flash('error', 'Minimum Master password length is 6');
+  if (req.body.is_admin === 'Yes' && req.body.master_password < 4) {
+    req.flash('error', 'Minimum Master password length is 4');
     return resp.redirect('/signup');
   }
   let is_admin = false;
@@ -303,8 +229,6 @@ app.post('/users', async (req, resp) => {
       hashedPassword,
       is_admin,
     );
-    console.log('User Created:');
-    console.log('User Id', user.id);
     req.login(user, (err) => {
       if (err) {
         console.log(err);
@@ -317,6 +241,190 @@ app.post('/users', async (req, resp) => {
       return resp.redirect('/signup');
     }
   }
+});
+
+app.get('/login', (req, resp) => {
+  resp.render('login', { title: 'Login' });
+});
+
+app.post(
+  '/session',
+  passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: true,
+  }),
+  (req, resp) => {
+    resp.redirect('/createSport');
+  },
+);
+
+app.get('/', (req, resp) => {
+  const title = 'Sports Scheduler';
+  resp.render('login', {
+    title,
+  });
+});
+
+app.get(
+  '/createSport',
+  connectEnsureLogin.ensureLoggedIn(),
+  (req, resp) => {
+    resp.render('createSport', {
+      title: 'Create Sport',
+      quotes: sportsQuotes,
+    });
+  },
+);
+
+app.post('/createSport', async (req, res) => {
+  try {
+    const sport = await Sport.create_sport(req.body.title, req.user.id);
+    res.redirect(302, `/sport/${sport.id}`);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get(
+  '/sport/:id',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    const sport = await Sport.findByPk(req.params.id);
+    const sessionItem = await Session.findAll({
+      where: {
+        sportId: sport.id,
+      },
+    });
+    resp.render('sport', {
+      sport,
+      sessionItem,
+    });
+  },
+);
+
+app.get(
+  '/sport/:sportId/createSession',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    res.render('createSession', {
+      title: 'Create New Session',
+      sessionItem: null,
+      players: null,
+      sportId: req.params.sportId,
+    });
+  },
+);
+
+app.get(
+  '/sport/:sportId/createSession/:sessionId',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    const { sportId } = req.params;
+
+    const sessionItem = await Session.findByPk(req.params.sessionId);
+    const playersList = await PlayersName.findAll({
+      where: {
+        sessionId: req.params.sessionId,
+      },
+    });
+    const players = playersList.map((player) => player.name).join(',');
+    resp.render('createSession', {
+      title: 'Create New Session',
+      sessionItem,
+      players,
+      sportId,
+    });
+  },
+);
+
+app.post('/sport/:sportId/createSession', async (req, resp) => {
+  try {
+    let sessionItem;
+
+    const sessionId = Number(req.body.sessionId);
+    const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
+    const sportId = Number(req.params.sportId); // Extract sportId from path
+
+    if (req.body.sessionId) {
+      await Session.update_existing_session({
+        dueDate,
+        venue: req.body.venue,
+        num_players: req.body.num_players,
+        sportId,
+        userId: req.user.id,
+        id: sessionId,
+      });
+      await PlayersName.update_players(req.body.players, req.user.first_name, sessionId);
+      resp.redirect(`/sport/${sportId}/editSession/${sessionId}`);
+    } else {
+      sessionItem = await Session.add_session({
+        dueDate: req.body.dueDate,
+        venue: req.body.venue,
+        num_players: req.body.num_players,
+        sportId,
+        userId: req.user.id,
+      });
+      await PlayersName.add_players(req.body.players, req.user.first_name, sessionItem.id);
+      resp.redirect(`/sport/${sportId}/editSession/${sessionItem.id}`);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get(
+  '/sport/:sportId/editSession/:sessionId',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    const title = 'Edit Session';
+    try {
+      const sportId = Number(req.params.sportId);
+      const sessionItem = await Session.findByPk(req.params.sessionId);
+      const playersList = await PlayersName.findAll({
+        where: {
+          sessionId: sessionItem.id,
+        },
+      });
+
+      resp.render('editSession', {
+        title,
+        sessionItem,
+        playersList,
+        sportId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
+
+// eslint-disable-next-line no-unused-vars
+app.delete('/editSession/deletePlayer/:playerId', async (req, res) => {
+  try {
+    await PlayersName.remove_player(req.params.playerId);
+    res.render('index');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete('/editSession/deleteSession/:sessionId', async (req, res) => {
+  try {
+    await Session.remove_session(req.params.sessionId);
+    res.render('index');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get('/signout', (req, resp, next) => {
+  req.logout((error) => {
+    if (error) {
+      return next(error);
+    }
+    resp.redirect('/');
+  });
 });
 
 module.exports = app;
