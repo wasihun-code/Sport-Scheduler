@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+        }
+        a {
+            font-size: 22px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">
+            <% if (userisadmin) { %>
+                <h1 class="title">Your Sports</h1>
+                <p class="description">Here are all of the sports you have previously created</p>
+            <% } else { %>
+                <h1 class="title">Sports</h1>
+                <% if (sports.length) { %>
+                    <p class="description">This are sports you can join. Choose one from the list</p>
+                <% } else { %>
+                     <p class="description">No sports to join. Wait for an Our Admins to create one for you.</p>
+                <% } %>
+             <% } %>
+        </div>
+        <div class="main-content">
+            <% if (sports.length) { %>
+                <% for (let sport of sports) { %>
+                    <a href="/sport/<%=sport.id%>"><p> <%= sport.title %> </p></a>
+                <% } %>
+            <% } %>
+        </div>
+        <div class="extra-content">
+            <% if (userisadmin) { %>
+                <a href="/createSport">Create New Sport</a>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

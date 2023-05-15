@@ -1,0 +1,178 @@
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+.background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 35%;
+  gap: 25px;
+  /* background-color: #A0D8B3; */
+  color: white;
+  background-image: url("/img/sport-background-2.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.sport-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 50px;
+  width: 65%;
+}
+
+.background-text {
+  width: 60%;
+  text-align: center;
+  font-size: larger;
+}
+
+.button-submit {
+  padding: 10px;
+  border-radius: 20px;
+  width: 50%;
+  background-color: #A0D8B3;
+  border: 1px solid white;
+  color: white;
+  text-align: center;
+  font-size: 22px;
+  text-decoration: none;
+}
+.form-title {
+  color: #A0D8B3;
+  font-size: 35px;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bolder;
+}
+input, .selectField {
+  width: 300px;
+  height: 35px;
+  border: 2px solid lightgrey;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+input::placeholder {
+  padding: 15px;
+}
+input:focus {
+  border: 2px solid rgb(189, 26, 26);
+  outline: none;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.quote-wrapper {
+  position: fixed;
+  bottom: 6px;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  width: 400px;
+  max-width: 100%;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  overflow: auto;
+}
+
+
+.author {
+  font-size: 30px;
+  color: #666;
+  font-family: sans-serif;
+  margin-bottom: 15px;
+}
+
+.quote {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.quote::before {
+  content: '"';
+  float: left;
+  margin-right: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+.quote::after {
+  content: '"';
+  float: right;
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.errors {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 20px;
+  width: 80%;
+  color: #E76161;
+  /* margin-bottom: ; */            
+}
+

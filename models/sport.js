@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const {
   Model,
 } = require('sequelize');
@@ -10,10 +11,37 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static get_all_sports_user(adminId) {
+      return this.findAll({
+        where: {
+          adminId,
+        },
+      });
+    }
+
     static create_sport(title, adminId) {
       return this.create({
         title,
         adminId,
+      });
+    }
+
+    static update_sport(title, adminId, id) {
+      return this.update({
+        title,
+        adminId,
+      }, {
+        where: {
+          id,
+        },
+      });
+    }
+
+    static remove_sport(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
       });
     }
   }

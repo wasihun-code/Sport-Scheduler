@@ -61,31 +61,42 @@
         <div class="container">
             <h1 class="heading"><%= sport.title %></h1>
             <div class="sessions">
-                <% if (sessionItem.length)  { %>
-                    <% for( let i = 0; i < sessionItem.length; i++ ) { %>
-                        <div class="session">
-                            <div>
-                                <h3>Venue:</h3>
-                                <p><%= sessionItem[i].venue %></p>
-                            </div>
-                            <div>
-                                <h3>Date:</h3>
-                                <p><%= sessionItem[i].dueDate %></p>
-                            </div>
-                            <div>
-                                <h3>Number of Players:</h3>
-                                <p><%= sessionItem[i].num_players %></p>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } else { %>
-                    <p>No sessions available. Create Sessions and come back to this page.</p>
-                <% } %>
+                <%- include('listSessions.ejs', {
+                    sessionsType: "Current Sessions(created by other users)",
+                    sessions:  current_sessions_others
+                }) %>
+                    <%- include('listSessions.ejs', {
+                        sessionsType: "Current Sessions(Your Sessions)",
+                        sessions:  current_user_sessions
+                    }) %>
+                <%- include('listSessions.ejs', {
+                    sessionsType: "Past Sessions",
+                    sessions: past_sessions
+                }) %>
             </div>
             <div class="links">
                 <a href="/sport/<%= sport.id %>/createSession/" class="btn">Create New Session</a>
                 <a href="#" class="btn">View Previous Sessions</a>
+                <% if (userisadmin) { %>
+                    <button  class="btn" type="reset" onclick="removeSport(<%= sport.id %>)">Delete Sport</button>
+                    <a href="/createSport/<%= sport.id %>" class="btn">Edit Sport</a>
+                <% } %>
             </div>
         </div>
+
+    <script>
+        function removeSport(sportId) {
+            fetch(
+                `/sport/deleteSport/${Number(sportId)}`, {
+                    method: "delete",
+                    headers: {
+                        "Content-Type": "application/json"
+                }}
+            ).then((res) => {
+                console.log("Fetch To delete Sport")
+                window.location.href = '/listSports'
+            })
+        }
+    </script>
     </body>
 </html>

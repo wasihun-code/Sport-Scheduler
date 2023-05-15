@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 
 const {
-  Model,
+  Model, Op,
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -24,9 +24,52 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static add_session({
-      dueDate, venue, num_players, sportId, userId,
-    }) {
+    static get_past_sessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+          dueDate: {
+            [Op.lt]: new Date(),
+          },
+        },
+      });
+    }
+
+    static get_current_sessions_of_other_users(sportId, userId) {
+      return this.findAll({
+        where: {
+          sportId,
+          dueDate: {
+            [Op.gt]: new Date(),
+          },
+          userId: {
+            [Op.not]: userId,
+          },
+        },
+      });
+    }
+
+    static get_current_sessions_of_user(sportId, userId) {
+      return this.findAll({
+        where: {
+          sportId,
+          dueDate: {
+            [Op.gt]: new Date(),
+          },
+          userId,
+        },
+      });
+    }
+
+    static get_all_sessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+        },
+      });
+    }
+
+    static add_session(dueDate, venue, num_players, sportId, userId) {
       return this.create({
         dueDate, venue, num_players, sportId, userId,
       });
@@ -40,9 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static update_existing_session({
-      dueDate, venue, num_players, sportId, userId, id,
-    }) {
+    static update_existing_session(dueDate, venue, num_players, sportId, userId, id) {
       return this.update({
         dueDate, venue, num_players, sportId, userId,
       }, {

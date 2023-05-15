@@ -1,0 +1,26 @@
+<%= sessionsType %>
+<% if (sessions.length)  { %>
+  <% for( let i = 0; i < sessions.length; i++ ) { %>
+      <div class="session">
+        <% if (sessionsType !== "Past Sessions") { %>
+          <a href="/sport/<%= sport.id %>/editSession/<%= sessions[i].id %>">
+              <div>
+                  <p><%= sessions[i].venue %></p>
+              </div>
+            </a>
+        <% } else { %>
+            <div>
+                <p><%= sessions[i].venue %></p>
+            </div>
+        <% } %>
+            <div>
+                <p><%= sessions[i].dueDate %></p>
+            </div>
+            <div>
+                <p><%= sessions[i].num_players %></p>
+            </div>
+      </div>
+  <% } %>
+<% } else { %>
+  <p>Not available.</p>
+<% } %>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable camelcase */
@@ -23,106 +24,14 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
+const signupErrorHandling = require('./utility');
 
 const saltRounds = 10;
 const {
   User, Session, Sport, PlayersName,
 } = require('./models');
 
-const sportsQuotes = [
-  {
-    quote: "Winning isn't everything, it's the only thing.",
-    author: 'Vince Lombardi',
-  },
-  {
-    quote: "It's not the will to win that matters—everyone has that. It's the will to prepare to win that matters.",
-    author: "Paul 'Bear' Bryant",
-  },
-  {
-    quote: "The difference between the impossible and the possible lies in a man's determination.",
-    author: 'Tommy Lasorda',
-  },
-  {
-    quote: "The only way to prove that you're a good sport is to lose.",
-    author: 'Ernie Banks',
-  },
-  {
-    quote: 'The more difficult the victory, the greater the happiness in winning.',
-    author: 'Pele',
-  },
-  {
-    quote: 'Champions keep playing until they get it right.',
-    author: 'Billie Jean King',
-  },
-  {
-    quote: "You miss 100% of the shots you don't take.",
-    author: 'Wayne Gretzky',
-  },
-  {
-    quote: "If you don't have confidence, you'll always find a way not to win.",
-    author: 'Carl Lewis',
-  },
-  {
-    quote: "It ain't over till it's over.",
-    author: 'Yogi Berra',
-  },
-  {
-    quote: "You can't put a limit on anything. The more you dream, the farther you get.",
-    author: 'Michael Phelps',
-  },
-  {
-    quote: "Gold medals aren't really made of gold. They're made of sweat, determination, and a hard-to-find alloy called guts.",
-    author: 'Dan Gable',
-  },
-  {
-    quote: "When you've got something to prove, there's nothing greater than a challenge.",
-    author: 'Terry Bradshaw',
-  },
-  {
-    quote: 'The more I practice, the luckier I get.',
-    author: 'Gary Player',
-  },
-  {
-    quote: "It's not whether you get knocked down; it's whether you get up.",
-    author: 'Vince Lombardi',
-  },
-  {
-    quote: 'Persistence can change failure into extraordinary achievement.',
-    author: 'Marv Levy',
-  },
-  {
-    quote: "You can't climb the ladder of success with your hands in your pockets.",
-    author: 'Arnold Schwarzenegger',
-  },
-  {
-    quote: 'If you want to go fast, go alone. If you want to go far, go together.',
-    author: 'African proverb',
-  },
-  {
-    quote: "I've failed over and over and over again in my life and that is why I succeed.",
-    author: 'Michael Jordan',
-  },
-  {
-    quote: 'Never say never because limits, like fears, are often just an illusion.',
-    author: 'Michael Jordan',
-  },
-  {
-    quote: 'The pain you feel today will be the strength you feel tomorrow.',
-    author: 'Arnold Schwarzenegger',
-  },
-  {
-    quote: 'The greatest glory in living lies not in never falling, but in rising every time we fall.',
-    author: 'Nelson Mandela',
-  },
-  {
-    quote: 'Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.',
-    author: 'Pele',
-  },
-  {
-    quote: 'The man who has no imagination has no wings.',
-    author: 'Muhammad Ali',
-  },
-];
+const { sportsQuotes } = require('./utility');
 
 // Passport Js Configuration
 app.use(flash());
@@ -132,7 +41,9 @@ app.use(
     secret: 'my-super-secret-key-187657654765423456788',
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookies: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   }),
 );
 
@@ -190,17 +101,18 @@ app.get('/signup', (request, response) => {
 });
 
 app.post('/users', async (req, resp) => {
-  if (req.body.first_name.length === 0) {
+  // A utility function for handling erros
+  if (!req.body.first_name.length) {
     req.flash('error', 'First name is required');
     return resp.redirect('/signup');
   }
 
-  if (req.body.last_name.length === 0) {
+  if (!req.body.last_name.length) {
     req.flash('error', 'Last name is required');
     return resp.redirect('/signup');
   }
 
-  if (req.body.email.length === 0) {
+  if (!req.body.email.length) {
     req.flash('error', 'Email is required');
     return resp.redirect('/signup');
   }
@@ -211,29 +123,24 @@ app.post('/users', async (req, resp) => {
   }
 
   if (req.body.is_admin === 'Yes' && req.body.master_password < 4) {
-    req.flash('error', 'Minimum Master password length is 4');
+    if (req.body.master_password !== 1234) {
+      req.flash('error', 'Master password was incorrect');
+    } else {
+      req.flash('error', 'Minimum Master password length is 4');
+    }
     return resp.redirect('/signup');
   }
-  let is_admin = false;
-  if (req.body.is_admin === 'Yes') {
-    if (req.body.master_password === 1234) {
-      is_admin = true;
-    }
-  }
+
+  const is_admin = req.body.is_admin === 'yes';
   const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  const { first_name, last_name, email } = req.body;
   try {
-    const user = await User.add_user(
-      req.body.first_name,
-      req.body.last_name,
-      req.body.email,
-      hashedPassword,
-      is_admin,
-    );
+    const user = await User.add_user(first_name, last_name, email, hashedPassword, is_admin);
     req.login(user, (err) => {
       if (err) {
         console.log(err);
       }
-      resp.redirect('/createSport');
+      resp.redirect('/listSports');
     });
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
@@ -254,7 +161,7 @@ app.post(
     failureFlash: true,
   }),
   (req, resp) => {
-    resp.redirect('/createSport');
+    resp.redirect('/listSports');
   },
 );
 
@@ -266,23 +173,66 @@ app.get('/', (req, resp) => {
 });
 
 app.get(
+  '/listSports',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    let sports;
+    const { id } = req.user;
+    const userisadmin = !!req.user.is_admin;
+
+    if (req.user.is_admin) {
+      sports = await Sport.get_all_sports_user(id);
+    } else {
+      sports = await Sport.findAll();
+    }
+
+    resp.render('listSports', {
+      title: 'Sports List',
+      sports,
+      userisadmin,
+    });
+  },
+);
+
+app.get(
   '/createSport',
   connectEnsureLogin.ensureLoggedIn(),
   (req, resp) => {
     resp.render('createSport', {
       title: 'Create Sport',
       quotes: sportsQuotes,
+      sport: null,
+    });
+  },
+);
+
+app.get(
+  '/createSport/:sportId',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    const sport = await Sport.findByPk(req.params.sportId);
+    resp.render('createSport', {
+      title: 'Edit Sport',
+      quotes: sportsQuotes,
+      sport,
     });
   },
 );
 
 app.post('/createSport', async (req, res) => {
   try {
-    const sport = await Sport.create_sport(req.body.title, req.user.id);
-    res.redirect(302, `/sport/${sport.id}`);
+    if (req.body.sportId) {
+      await Sport.update_sport(req.body.title, req.user.id, req.body.sportId);
+      res.redirect(302, `/sport/${Number(req.body.sportId)}`);
+    } else {
+      const sport = await Sport.create_sport(req.body.title, req.user.id);
+      res.redirect(302, `/sport/${Number(sport.id)}`);
+    }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      req.flash('error', 'Sport already exists. Choose another name.');
+      res.redirect('/createSport');
+    }
   }
 });
 
@@ -290,15 +240,20 @@ app.get(
   '/sport/:id',
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
+    const { id } = req.user;
     const sport = await Sport.findByPk(req.params.id);
-    const sessionItem = await Session.findAll({
-      where: {
-        sportId: sport.id,
-      },
-    });
+    const sportId = sport.id;
+    const userisadmin = !!req.user.is_admin;
+    const past_sessions = await Session.get_past_sessions(sportId);
+    // eslint-disable-next-line max-len
+    const current_sessions_others = await Session.get_current_sessions_of_other_users(sportId, id);
+    const current_user_sessions = await Session.get_current_sessions_of_user(sport.id, req.user.id);
     resp.render('sport', {
       sport,
-      sessionItem,
+      past_sessions,
+      current_sessions_others,
+      current_user_sessions,
+      userisadmin,
     });
   },
 );
@@ -342,29 +297,19 @@ app.post('/sport/:sportId/createSession', async (req, resp) => {
   try {
     let sessionItem;
 
-    const sessionId = Number(req.body.sessionId);
-    const dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
+    const id = Number(req.body.sessionId);
     const sportId = Number(req.params.sportId); // Extract sportId from path
+    const userId = req.user.id;
+    // eslint-disable-next-line prefer-const
+    let { venue, num_players, dueDate } = req.body;
+    dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
 
     if (req.body.sessionId) {
-      await Session.update_existing_session({
-        dueDate,
-        venue: req.body.venue,
-        num_players: req.body.num_players,
-        sportId,
-        userId: req.user.id,
-        id: sessionId,
-      });
-      await PlayersName.update_players(req.body.players, req.user.first_name, sessionId);
-      resp.redirect(`/sport/${sportId}/editSession/${sessionId}`);
+      await Session.update_existing_session(dueDate, venue, num_players, sportId, userId, id);
+      await PlayersName.update_players(req.body.players, req.user.first_name, id);
+      resp.redirect(`/sport/${sportId}/editSession/${id}`);
     } else {
-      sessionItem = await Session.add_session({
-        dueDate: req.body.dueDate,
-        venue: req.body.venue,
-        num_players: req.body.num_players,
-        sportId,
-        userId: req.user.id,
-      });
+      sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, userId);
       await PlayersName.add_players(req.body.players, req.user.first_name, sessionItem.id);
       resp.redirect(`/sport/${sportId}/editSession/${sessionItem.id}`);
     }
@@ -381,17 +326,18 @@ app.get(
     try {
       const sportId = Number(req.params.sportId);
       const sessionItem = await Session.findByPk(req.params.sessionId);
+      const user = await User.findByPk(Number(req.user.id));
       const playersList = await PlayersName.findAll({
         where: {
           sessionId: sessionItem.id,
         },
       });
-
       resp.render('editSession', {
         title,
         sessionItem,
         playersList,
         sportId,
+        user,
       });
     } catch (error) {
       console.log(error);
@@ -418,6 +364,15 @@ app.delete('/editSession/deleteSession/:sessionId', async (req, res) => {
   }
 });
 
+app.delete('/sport/deleteSport/:sportId', async (req, res) => {
+  try {
+    await Sport.remove_sport(req.params.sportId);
+    res.render('listSports');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.get('/signout', (req, resp, next) => {
   req.logout((error) => {
     if (error) {
@@ -425,6 +380,57 @@ app.get('/signout', (req, resp, next) => {
     }
     resp.redirect('/');
   });
+});
+
+app.post('/sport/:sportId/createSession/:sessionId/join/:userid', async (req, res) => {
+  const user = await User.findByPk(Number(req.params.userid));
+  try {
+    const ses = await Session.findByPk(req.params.sessionId);
+    await Session.update(
+      {
+        num_players: ses.num_players - 1,
+      },
+      {
+        where: {
+          id: req.params.sessionId,
+        },
+      },
+    );
+    await PlayersName.create({
+      name: user.first_name,
+      sessionId: req.params.sessionId,
+    });
+    res.redirect(302, `/sport/${req.params.sportId}/editSession/${req.params.sessionId}`);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/sport/:sportId/createSession/:sessionId/leave/:userid', async (req, res) => {
+  const user = await User.findByPk(Number(req.params.userid));
+
+  try {
+    const ses = await Session.findByPk(req.params.sessionId);
+    await Session.update(
+      {
+        num_players: ses.num_players + 1,
+      },
+      {
+        where: {
+          id: req.params.sessionId,
+        },
+      },
+    );
+    await PlayersName.destroy({
+      where: {
+        name: user.first_name,
+        sessionId: req.params.sessionId,
+      },
+    });
+    res.redirect(302, `/sport/${req.params.sportId}/editSession/${req.params.sessionId}`);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = app;
