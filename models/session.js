@@ -61,6 +61,16 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static async joined_session(sportId, sessionIds) {
+      const sessions = await Promise.all(sessionIds.map((sessionId) => this.findAll({
+        where: {
+          sportId,
+          id: sessionId,
+        },
+      })));
+      return sessions.flat();
+    }
+
     static get_all_sessions(sportId) {
       return this.findAll({
         where: {

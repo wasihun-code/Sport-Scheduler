@@ -65,10 +65,14 @@
                     sessionsType: "Current Sessions(created by other users)",
                     sessions:  current_sessions_others
                 }) %>
-                    <%- include('listSessions.ejs', {
-                        sessionsType: "Current Sessions(Your Sessions)",
-                        sessions:  current_user_sessions
-                    }) %>
+                <%- include('listSessions.ejs', {
+                    sessionsType: "Current Sessions(Your Sessions)",
+                    sessions:  current_user_sessions
+                }) %>
+                <%- include('listSessions.ejs', {
+                    sessionsType: "Joined Sessions",
+                    sessions: joined_sessions
+                }) %>
                 <%- include('listSessions.ejs', {
                     sessionsType: "Past Sessions",
                     sessions: past_sessions

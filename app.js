@@ -240,19 +240,25 @@ app.get(
   '/sport/:id',
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
-    const { id } = req.user;
+    const { id, first_name } = req.user;
     const sport = await Sport.findByPk(req.params.id);
     const sportId = sport.id;
     const userisadmin = !!req.user.is_admin;
     const past_sessions = await Session.get_past_sessions(sportId);
+    const player_sessions_id = (await
+    PlayersName.findAll({ where: { name: first_name } })).map((player) => player.sessionId);
     // eslint-disable-next-line max-len
     const current_sessions_others = await Session.get_current_sessions_of_other_users(sportId, id);
-    const current_user_sessions = await Session.get_current_sessions_of_user(sport.id, req.user.id);
+    const current_user_sessions = await Session.get_current_sessions_of_user(sportId, req.user.id);
+    const joined_sessions = await Session.joined_session(sportId, player_sessions_id);
+    // eslint-disable-next-line no-restricted-syntax
+
     resp.render('sport', {
       sport,
       past_sessions,
       current_sessions_others,
       current_user_sessions,
+      joined_sessions,
       userisadmin,
     });
   },
