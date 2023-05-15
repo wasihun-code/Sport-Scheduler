@@ -63,23 +63,23 @@
           margin-bottom: 20px;
         }
         .players {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  flex-direction: row;
-}
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex-direction: row;
+        }
 
-.player {
-  flex: 0 0 auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  margin-right: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
+        .player {
+            flex: 0 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-right: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
 
         
         .player p {
@@ -260,7 +260,9 @@
 
     <% if (user.id === sessionItem.userId) { %>
         <a href="/sport/<%= sportId %>/createSession/<%= sessionItem.id %>/">Edit Session</a>
-        <button id="delete-session-button" type="reset" onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
+        <a href="/sport/<%= sportId %>/cancelSession/<%= sessionItem.id %>/">cancel Session</a>
+        <button id="delete-session-button" type="reset" 
+            onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
     <% } %>
 
     <% const playerNameList = playersList.map(player => player.name); %>

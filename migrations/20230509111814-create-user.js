@@ -10,9 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       first_name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       last_name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       email: {
@@ -25,6 +27,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       is_admin: {
+        allowNull: false,
         type: Sequelize.BOOLEAN,
       },
       createdAt: {

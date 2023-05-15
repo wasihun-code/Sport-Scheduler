@@ -10,12 +10,15 @@ module.exports = {
       },
       dueDate: {
         type: Sequelize.DATE,
+        allowNull: false,
       },
       venue: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       num_players: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

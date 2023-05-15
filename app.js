@@ -306,16 +306,20 @@ app.post('/sport/:sportId/createSession', async (req, resp) => {
     const id = Number(req.body.sessionId);
     const sportId = Number(req.params.sportId); // Extract sportId from path
     const userId = req.user.id;
+    const canceled = false;
+    const reason = '';
     // eslint-disable-next-line prefer-const
     let { venue, num_players, dueDate } = req.body;
     dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
 
     if (req.body.sessionId) {
-      await Session.update_existing_session(dueDate, venue, num_players, sportId, userId, id);
+      // eslint-disable-next-line max-len
+      await Session.update_existing_session(dueDate, venue, num_players, sportId, userId, id, canceled, reason);
       await PlayersName.update_players(req.body.players, req.user.first_name, id);
       resp.redirect(`/sport/${sportId}/editSession/${id}`);
     } else {
-      sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, userId);
+      // eslint-disable-next-line max-len
+      sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, userId, canceled, reason);
       await PlayersName.add_players(req.body.players, req.user.first_name, sessionItem.id);
       resp.redirect(`/sport/${sportId}/editSession/${sessionItem.id}`);
     }
@@ -351,6 +355,41 @@ app.get(
   },
 );
 
+app.get(
+  '/sport/:sportId/cancelSession/:sessionId',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    const title = 'Cancel Session';
+    try {
+      const sportId = Number(req.params.sportId);
+      const sessionItem = await Session.findByPk(Number(req.params.sessionId));
+      resp.render('cancelSession', {
+        title,
+        sessionItem,
+        sportId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
+
+app.post(
+  '/sport/:sportId/cancelSession/:sessionId',
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, resp) => {
+    try {
+      const { sportId, sessionId } = req.params;
+      const sessionItem = await Session.findByPk(Number(sessionId));
+      const canceled = !sessionItem.canceled;
+      const reason = !canceled ? '' : req.body.reason;
+      await Session.toggle_cancel(sessionId, canceled, reason);
+      resp.redirect(302, `/sport/${sportId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
 // eslint-disable-next-line no-unused-vars
 app.delete('/editSession/deletePlayer/:playerId', async (req, res) => {
   try {
@@ -364,6 +403,15 @@ app.delete('/editSession/deletePlayer/:playerId', async (req, res) => {
 app.delete('/editSession/deleteSession/:sessionId', async (req, res) => {
   try {
     await Session.remove_session(req.params.sessionId);
+    res.render('index');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.put('/editSession/cancelSession/:sessionId', async (req, res) => {
+  try {
+    await Session.cancel_session(req.params.sessionId);
     res.render('index');
   } catch (error) {
     console.log(error);

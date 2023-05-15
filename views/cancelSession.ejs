@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <style>
+      body {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #f7fafc;
+          font-family: "Helvetica Neue", sans-serif;
+      }
+      .container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+      }
+      .form-section {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 60%;
+          border: 2px solid #e2e8f0;
+          border-radius: 0.5rem;
+          padding: 2rem;
+          background-color: #fff;
+          box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 1.5rem;
+          width: 100%;
+      }
+      .form-group label {
+          margin-bottom: 0.5rem;
+          font-weight: bold;
+      }
+      .submit-btn {
+          background-color: #007bff;
+          color: #fff;
+          padding: 1rem 2rem;
+          border: none;
+          border-radius: 0.5rem;
+          font-size: 1.2rem;
+          cursor: pointer;
+          margin-top: 1.5rem;
+          transition: all 0.2s ease-in-out;
+      }
+      .submit-btn:hover {
+          background-color: #0069d9;
+      }
+  </style>
+</head>
+<body>
+  <form action="/sport/<%= sportId %>/cancelSession/<%= sessionItem.id %>" method="post">
+    <h1> Cancel Session </h1>
+    <div class="form-group">
+        <% if (sessionItem.canceled == false) { %>
+            <label>Reason why you canceled the session.</label>
+            <textarea name="reason" rows="4" cols="50">
+            </textarea>
+        <% } %>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="submit-btn">
+            <% if (sessionItem.canceled) { %>
+                Keep Session
+            <% } else { %>
+                    Verify Cancelation
+             <% } %>
+        </button>
+    </div>
+</form>
+</div>
+</body>

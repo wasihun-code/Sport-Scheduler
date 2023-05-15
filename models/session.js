@@ -79,9 +79,31 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static add_session(dueDate, venue, num_players, sportId, userId) {
+    static toggle_cancel(id, canceled, reason) {
+      return this.update(
+        {
+          canceled,
+          reason,
+        },
+        {
+          where: {
+            id,
+          },
+        },
+      )
+        .then((updatedRows) => {
+          console.log('Updated rows:', updatedRows);
+        })
+        .catch((error) => {
+          console.log('Update error:', error);
+        });
+    }
+
+    static add_session(dueDate, venue, num_players, sportId, userId, canceled, reason) {
+      console.log('Canceled', canceled);
+      console.log('Reason', '*', reason);
       return this.create({
-        dueDate, venue, num_players, sportId, userId,
+        dueDate, venue, num_players, sportId, userId, canceled, reason,
       });
     }
 
@@ -93,9 +115,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static update_existing_session(dueDate, venue, num_players, sportId, userId, id) {
+    // eslint-disable-next-line max-len
+    static update_existing_session(dueDate, venue, num_players, sportId, userId, id, canceled, reason) {
       return this.update({
-        dueDate, venue, num_players, sportId, userId,
+        dueDate, venue, num_players, sportId, userId, canceled, reason,
       }, {
         where: {
           id,
