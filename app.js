@@ -396,11 +396,11 @@ app.post('/sport/:sportId/editSession/deleteSession/:sessionId', async (req, res
   }
 });
 
-app.delete('/sport/deleteSport/:sportId', requireAdministrator, async (req, res) => {
+app.post('/sport/deleteSport/:sportId', requireAdministrator, async (req, res) => {
   const { sportId } = req.params;
   try {
     await Sport.remove_sport(sportId);
-    res.render('listSports');
+    res.redirect(302, '/listSports');
   } catch (error) {
     console.log(error);
   }
