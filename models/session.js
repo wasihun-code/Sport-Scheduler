@@ -53,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           userId: {
             [Op.not]: userId,
           },
+          canceled: false,
         },
       });
     }
@@ -65,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
             [Op.gt]: new Date(),
           },
           userId,
+          canceled: false,
         },
       });
     }
@@ -74,6 +76,10 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           id: sessionId,
+          dueDate: {
+            [Op.gt]: new Date(),
+          },
+          canceled: false,
         },
       })));
       return sessions.flat();
@@ -92,6 +98,9 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           sportId,
           canceled: true,
+          dueDate: {
+            [Op.gt]: new Date(),
+          },
         },
       });
     }

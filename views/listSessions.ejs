@@ -19,9 +19,15 @@
             <div>
                 <p><%= sessions[i].dueDate %></p>
             </div>
+            <% if (sessionsType !== "Canceled Sessions") { %>
             <div>
-                <p><%= sessions[i].num_players %></p>
+                <p><%= sessions[i].reason %></p>
             </div>
+            <% } else { %>
+              <div>
+                <p><%= sessions[i].num_players %></p>
+              </div>
+            <% } %>
       </div>
   <% } %>
 <% } else { %>
