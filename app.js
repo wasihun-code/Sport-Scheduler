@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable object-curly-newline */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -24,18 +26,24 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
-const signupErrorHandling = require('./utility');
-
-const saltRounds = 10;
 const {
   User, Session, Sport, PlayersName,
 } = require('./models');
 
-const { sportsQuotes } = require('./utility');
+const saltRounds = 10;
+const { sportsQuotes, signupErrorHandling } = require('./utility');
 
 // Passport Js Configuration
 app.use(flash());
-
+function requireAdministrator(req, res, next) {
+  if (req.user && req.user.is_admin) {
+    return next();
+  // eslint-disable-next-line no-else-return
+  } else {
+    req.flash('error', 'Unauthorized User. You need to be admin for that.');
+    res.redirect('/listSports');
+  }
+}
 app.use(
   session({
     secret: 'my-super-secret-key-187657654765423456788',
@@ -196,6 +204,7 @@ app.get(
 
 app.get(
   '/createSport',
+  requireAdministrator,
   connectEnsureLogin.ensureLoggedIn(),
   (req, resp) => {
     resp.render('createSport', {
@@ -208,6 +217,7 @@ app.get(
 
 app.get(
   '/createSport/:sportId',
+  requireAdministrator,
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
     const sport = await Sport.findByPk(req.params.sportId);
@@ -219,13 +229,15 @@ app.get(
   },
 );
 
-app.post('/createSport', async (req, res) => {
+app.post('/createSport', requireAdministrator, async (req, res) => {
+  const { sportId, title } = req.body;
+  const { id } = req.user;
   try {
-    if (req.body.sportId) {
-      await Sport.update_sport(req.body.title, req.user.id, req.body.sportId);
-      res.redirect(302, `/sport/${Number(req.body.sportId)}`);
+    if (sportId) {
+      await Sport.update_sport(title, id, sportId);
+      res.redirect(302, `/sport/${Number(sportId)}`);
     } else {
-      const sport = await Sport.create_sport(req.body.title, req.user.id);
+      const sport = await Sport.create_sport(title, id);
       res.redirect(302, `/sport/${Number(sport.id)}`);
     }
   } catch (error) {
@@ -253,16 +265,7 @@ app.get(
     const joined_sessions = await Session.joined_session(sportId, player_sessions_id);
     const canceled_sessions = await Session.canceled_sessions(sportId);
     // eslint-disable-next-line no-restricted-syntax
-
-    resp.render('sport', {
-      sport,
-      past_sessions,
-      current_sessions_others,
-      current_user_sessions,
-      joined_sessions,
-      canceled_sessions,
-      userisadmin,
-    });
+    resp.render('sport', { sport, past_sessions, current_sessions_others, current_user_sessions, joined_sessions, canceled_sessions, userisadmin });
   },
 );
 
@@ -283,44 +286,34 @@ app.get(
   '/sport/:sportId/createSession/:sessionId',
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
-    const { sportId } = req.params;
-
-    const sessionItem = await Session.findByPk(req.params.sessionId);
-    const playersList = await PlayersName.findAll({
-      where: {
-        sessionId: req.params.sessionId,
-      },
-    });
+    const { sportId, sessionId } = req.params;
+    const title = 'Create Your Session';
+    const sessionItem = await Session.findByPk(sessionId);
+    const playersList = await PlayersName.findAll({ where: { sessionId } });
     const players = playersList.map((player) => player.name).join(',');
-    resp.render('createSession', {
-      title: 'Create New Session',
-      sessionItem,
-      players,
-      sportId,
-    });
+    resp.render('createSession', { title, sessionItem, players, sportId });
   },
 );
 
 app.post('/sport/:sportId/createSession', async (req, resp) => {
   try {
     let sessionItem;
+    const { sessionId, sportId } = req.params;
 
-    const id = Number(req.body.sessionId);
-    const sportId = Number(req.params.sportId); // Extract sportId from path
-    const userId = req.user.id;
+    const { id } = req.user;
+
     // eslint-disable-next-line prefer-const
-    let { venue, num_players, dueDate } = req.body;
+    let { venue, num_players, dueDate, players } = req.body;
     dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
 
-    if (req.body.sessionId) {
-      // eslint-disable-next-line max-len
-      await Session.update_existing_session(dueDate, venue, num_players, sportId, userId, id);
-      await PlayersName.update_players(req.body.players, req.user.first_name, id);
+    if (sessionId) {
+      await
+      Session.update_existing_session(dueDate, venue, num_players, sportId, id, sessionId);
+      await PlayersName.update_players(players, req.user.first_name, sessionId);
       resp.redirect(`/sport/${sportId}/editSession/${id}`);
     } else {
-      // eslint-disable-next-line max-len
-      sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, userId);
-      await PlayersName.add_players(req.body.players, req.user.first_name, sessionItem.id);
+      sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, id);
+      await PlayersName.add_players(players, req.user.first_name, sessionItem.id);
       resp.redirect(`/sport/${sportId}/editSession/${sessionItem.id}`);
     }
   } catch (error) {
@@ -333,22 +326,17 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
     const title = 'Edit Session';
+    const { sportId, sessionId } = req.params;
+    const { id } = req.user;
     try {
-      const sportId = Number(req.params.sportId);
-      const sessionItem = await Session.findByPk(req.params.sessionId);
-      const user = await User.findByPk(Number(req.user.id));
+      const sessionItem = await Session.findByPk(sessionId);
+      const user = await User.findByPk(Number(id));
       const playersList = await PlayersName.findAll({
         where: {
           sessionId: sessionItem.id,
         },
       });
-      resp.render('editSession', {
-        title,
-        sessionItem,
-        playersList,
-        sportId,
-        user,
-      });
+      resp.render('editSession', { title, sessionItem, playersList, sportId, user });
     } catch (error) {
       console.log(error);
     }
@@ -360,14 +348,11 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (req, resp) => {
     const title = 'Cancel Session';
+    const { sportId, sessionId } = req.params;
+
     try {
-      const sportId = Number(req.params.sportId);
-      const sessionItem = await Session.findByPk(Number(req.params.sessionId));
-      resp.render('cancelSession', {
-        title,
-        sessionItem,
-        sportId,
-      });
+      const sessionItem = await Session.findByPk(Number(sessionId));
+      resp.render('cancelSession', { title, sessionItem, sportId });
     } catch (error) {
       console.log(error);
     }
@@ -382,9 +367,7 @@ app.post(
       const { sportId, sessionId } = req.params;
       const sessionItem = await Session.findByPk(Number(sessionId));
       const canceled = !sessionItem.canceled;
-      console.log('canceled: ', canceled);
       const reason = !canceled ? ' '.trim() : req.body.reason;
-      console.log('reason: ', reason);
       await Session.toggle_cancel(sessionId, canceled, reason);
       resp.redirect(302, `/sport/${sportId}`);
     } catch (error) {
@@ -393,27 +376,30 @@ app.post(
   },
 );
 // eslint-disable-next-line no-unused-vars
-app.delete('/editSession/deletePlayer/:playerId', async (req, res) => {
+app.post('/sport/:sportId/editSession/:sessionId/deletePlayer/player/:playerId', async (req, res) => {
+  const { playerId, sportId, sessionId } = req.params;
   try {
-    await PlayersName.remove_player(req.params.playerId);
-    res.render('index');
+    await PlayersName.remove_player(playerId);
+    res.redirect(302, `/sport/${sportId}/editSession/${sessionId}`);
   } catch (error) {
     console.log(error);
   }
 });
 
-app.delete('/editSession/deleteSession/:sessionId', async (req, res) => {
+app.post('/sport/:sportId/editSession/deleteSession/:sessionId', async (req, res) => {
+  const { sportId, sessionId } = req.params;
   try {
-    await Session.remove_session(req.params.sessionId);
-    res.render('index');
+    await Session.remove_session(sessionId);
+    res.redirect(302, `/sport/${Number(sportId)}`);
   } catch (error) {
     console.log(error);
   }
 });
 
-app.delete('/sport/deleteSport/:sportId', async (req, res) => {
+app.delete('/sport/deleteSport/:sportId', requireAdministrator, async (req, res) => {
+  const { sportId } = req.params;
   try {
-    await Sport.remove_sport(req.params.sportId);
+    await Sport.remove_sport(sportId);
     res.render('listSports');
   } catch (error) {
     console.log(error);
@@ -429,52 +415,54 @@ app.get('/signout', (req, resp, next) => {
   });
 });
 
-app.post('/sport/:sportId/createSession/:sessionId/join/:userid', async (req, res) => {
-  const user = await User.findByPk(Number(req.params.userid));
+app.post('/sport/:sportId/createSession/:sessionId/join/:userId', async (req, res) => {
+  const { sportId, sessionId, userId } = req.params;
+  const user = await User.findByPk(Number(userId));
   try {
-    const ses = await Session.findByPk(req.params.sessionId);
+    const ses = await Session.findByPk(sessionId);
     await Session.update(
       {
         num_players: ses.num_players - 1,
       },
       {
         where: {
-          id: req.params.sessionId,
+          id: sessionId,
         },
       },
     );
     await PlayersName.create({
       name: user.first_name,
-      sessionId: req.params.sessionId,
+      sessionId,
     });
-    res.redirect(302, `/sport/${req.params.sportId}/editSession/${req.params.sessionId}`);
+    res.redirect(302, `/sport/${sportId}/editSession/${sessionId}`);
   } catch (error) {
     console.log(error);
   }
 });
 
-app.post('/sport/:sportId/createSession/:sessionId/leave/:userid', async (req, res) => {
-  const user = await User.findByPk(Number(req.params.userid));
+app.post('/sport/:sportId/createSession/:sessionId/leave/:userId', async (req, res) => {
+  const { sportId, sessionId, userId } = req.params;
+  const user = await User.findByPk(Number(userId));
 
   try {
-    const ses = await Session.findByPk(req.params.sessionId);
+    const ses = await Session.findByPk(sessionId);
     await Session.update(
       {
         num_players: ses.num_players + 1,
       },
       {
         where: {
-          id: req.params.sessionId,
+          id: sessionId,
         },
       },
     );
     await PlayersName.destroy({
       where: {
         name: user.first_name,
-        sessionId: req.params.sessionId,
+        sessionId,
       },
     });
-    res.redirect(302, `/sport/${req.params.sportId}/editSession/${req.params.sessionId}`);
+    res.redirect(302, `/sport/${sportId}/editSession/${sessionId}`);
   } catch (error) {
     console.log(error);
   }

@@ -5,59 +5,69 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title><%= sport.title %></title>
+        <link rel="stylesheet" href="/css/styles.css">
         <style>
-            body {
-                margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                height: 100vh;
-                background-color: #f7fafc;
-                font-family: "Helvetica Neue", sans-serif;
-            }
-            .session {
-                border: 2px solid #e2e8f0;
-                border-radius: 0.5rem;
-                padding: 1rem;
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-                align-items: center;
-                font-size: 1.2rem;
-            }
-            .sessions {
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-                align-items: center;
-            }
-            .heading {
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-            .links {
-                display: flex;
-                justify-content: center;
-                gap: 2rem;
-                margin-top: 2rem;
-            }
-            .btn {
-                padding: 0.5rem 1.5rem;
-                border: none;
-                border-radius: 0.5rem;
-                background-color: #edf2f7;
-                color: #4a5568;
-                font-weight: bold;
-                text-decoration: none;
-                transition: all 0.2s ease-in-out;
-            }
-            .btn:hover {
-                background-color: #e2e8f0;
-                cursor: pointer;
-            }
+        .container {
+           width: 80%;
+          margin-left: 20%;
+          background-color: #fff;
+          padding: 10px;
+          color: #000;
+        }
+        .heading {
+            margin-left: 10px;
+            font-size: larger;
+            font-weight: bolder;
+        }
+        .sessions {
+          margin-bottom: 20px;
+        }
+
+        .session {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          align-items: center;
+          padding: 10px;
+          background-color: #f1f1f1;
+          border-radius: 5px;
+          gap: 0px;
+        }
+
+        .session div {
+          display: flex;
+          align-items: center;
+          margin-right: 0px;
+        }
+
+        .links {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+
+        .links a {
+          display: inline-block;
+          background-color: #5e42a6;
+          color: #fff;
+          padding: 10px 20px;
+          text-decoration: none;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+        }
+
+        .links a:hover {
+          background-color: #4b357d;
+        }
+
+        .btn {
+          margin-right: 10px;
+        }
+
+
         </style>
     </head>
     <body>
+        <%- include('sidebar.ejs') %>
         <div class="container">
             <h1 class="heading"><%= sport.title %></h1>
             <div class="sessions">
@@ -84,7 +94,6 @@
             </div>
             <div class="links">
                 <a href="/sport/<%= sport.id %>/createSession/" class="btn">Create New Session</a>
-                <a href="#" class="btn">View Previous Sessions</a>
                 <% if (userisadmin) { %>
                     <button  class="btn" type="reset" onclick="removeSport(<%= sport.id %>)">Delete Sport</button>
                     <a href="/createSport/<%= sport.id %>" class="btn">Edit Sport</a>

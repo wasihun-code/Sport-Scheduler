@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="/css/stylecreateSport.css">
     <link rel="stylesheet" href="/css/styles.css">
   </head>
-  <body>
-    <div class="container">
-        <div class="background">
-        </div>
+  <body>  
+       <%- include('sidebar.ejs') %>      
         <div class="sport-form">
             <form action="/createSport" method="post">
                 <h2 class="form-title"><%= title %></h2>
@@ -42,11 +40,10 @@
         <div class="quote-wrapper">
             <div class="author">
                 <%= quotes[Math.floor(Math.random() * quotes.length)].author %>
-            </div%>
+            </div>
             <div class="quote">
                 <%= quotes[Math.floor(Math.random() * quotes.length)].quote %>
-            </div%>
-        </div>    
+            </div>
       </div>
     </div>
   </body>

@@ -18,6 +18,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
 
+      this.belongsTo(models.User, {
+        foreignKey: {
+          name: 'userId',
+          allowNull: false,
+          onDelete: 'CASCADE',
+        },
+      });
+
       this.hasMany(models.PlayersName, {
         foreignKey: 'sessionId',
         onDelete: 'CASCADE',

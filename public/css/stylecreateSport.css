@@ -1,21 +1,3 @@
-.container {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-}
-.background {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 35%;
-  gap: 25px;
-  /* background-color: #A0D8B3; */
-  color: white;
-  background-image: url("/img/sport-background-2.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
 
 .sport-form {
   display: flex;
@@ -24,6 +6,8 @@
   flex-direction: column;
   gap: 50px;
   width: 65%;
+  margin-left: 50px;
+  margin-top: 30px;
 }
 
 .background-text {
