@@ -467,5 +467,28 @@ app.post('/sport/:sportId/createSession/:sessionId/leave/:userId', async (req, r
     console.log(error);
   }
 });
+app.get('/404', (req, res) => {
+  res.status(404).render('error', {
+    title: '404 - Not Found',
+    errorCode: 404,
+    errorMessage: 'The page you are looking for does not exist.',
+  });
+});
 
+app.get('/500', (req, res) => {
+  res.status(500).render('error', {
+    title: '500 - Internal Server Error',
+    errorCode: 500,
+    errorMessage: 'An internal server error occurred.',
+  });
+});
+// Error handling middleware
+app.use((req, res, next) => {
+  res.status(404).redirect('/404');
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).redirect('/500');
+});
 module.exports = app;
