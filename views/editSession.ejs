@@ -260,7 +260,13 @@
 
     <% if (user.id === sessionItem.userId) { %>
         <a href="/sport/<%= sportId %>/createSession/<%= sessionItem.id %>/">Edit Session</a>
-        <a href="/sport/<%= sportId %>/cancelSession/<%= sessionItem.id %>/">cancel Session</a>
+        <a href="/sport/<%= sportId %>/cancelSession/<%= sessionItem.id %>/">
+            <% if (sessionItem.canceled) { %>
+                Keep Session
+            <% } else { %>
+                Cancel Session
+            <% } %>
+        </a>
         <button id="delete-session-button" type="reset" 
             onclick="removeSession('<%= sportId %>','<%= sessionItem.id %>')">Delete Session</button>
     <% } %>
@@ -321,7 +327,7 @@
                 window.location.reload();
                 }
             }).catch((error) => console.log(error));
-}
+        }
         function joinSession(sportId, sessionId, userId) {
             console.log('Join Session Function called')
             fetch(`/sport/${Number(sportId)}/createSession/${Number(sessionId)}/join/${Number(userId)}`, {

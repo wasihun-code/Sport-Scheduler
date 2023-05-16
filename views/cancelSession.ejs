@@ -64,9 +64,14 @@
 </head>
 <body>
   <form action="/sport/<%= sportId %>/cancelSession/<%= sessionItem.id %>" method="post">
-    <h1> Cancel Session </h1>
+    <% if (sessionItem.canceled) { %>
+        <h1> Do you want to keep the session? </h1>
+    <% } else  { %>
+        <h1> Cancel Session </h1>
+    <% } %>
     <div class="form-group">
-        <% if (sessionItem.canceled == false) { %>
+        <% if (sessionItem.canceled) { %>
+        <% } else  { %>
             <label>Reason why you canceled the session.</label>
             <textarea name="reason" rows="4" cols="50">
             </textarea>
@@ -75,9 +80,9 @@
     <div class="form-group">
         <button type="submit" class="submit-btn">
             <% if (sessionItem.canceled) { %>
-                Keep Session
+                Uncancel Session
             <% } else { %>
-                    Verify Cancelation
+                Verify Cancelation
              <% } %>
         </button>
     </div>

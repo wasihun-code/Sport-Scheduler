@@ -74,6 +74,10 @@
                     sessions: joined_sessions
                 }) %>
                 <%- include('listSessions.ejs', {
+                    sessionsType: "Canceled Sessions",
+                    sessions: canceled_sessions
+                }) %>
+                <%- include('listSessions.ejs', {
                     sessionsType: "Past Sessions",
                     sessions: past_sessions
                 }) %>

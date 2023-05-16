@@ -79,6 +79,15 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static canceled_sessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+          canceled: true,
+        },
+      });
+    }
+
     static toggle_cancel(id, canceled, reason) {
       return this.update(
         {
@@ -99,11 +108,9 @@ module.exports = (sequelize, DataTypes) => {
         });
     }
 
-    static add_session(dueDate, venue, num_players, sportId, userId, canceled, reason) {
-      console.log('Canceled', canceled);
-      console.log('Reason', '*', reason);
+    static add_session(dueDate, venue, num_players, sportId, userId) {
       return this.create({
-        dueDate, venue, num_players, sportId, userId, canceled, reason,
+        dueDate, venue, num_players, sportId, userId,
       });
     }
 
@@ -116,9 +123,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // eslint-disable-next-line max-len
-    static update_existing_session(dueDate, venue, num_players, sportId, userId, id, canceled, reason) {
+    static update_existing_session(dueDate, venue, num_players, sportId, userId, id) {
       return this.update({
-        dueDate, venue, num_players, sportId, userId, canceled, reason,
+        dueDate, venue, num_players, sportId, userId,
       }, {
         where: {
           id,
@@ -145,6 +152,15 @@ module.exports = (sequelize, DataTypes) => {
         model: 'User',
         key: 'id',
       },
+    },
+    canceled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    reason: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
     },
   }, {
     sequelize,
