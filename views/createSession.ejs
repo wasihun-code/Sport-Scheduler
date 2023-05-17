@@ -7,7 +7,7 @@
     <title><%= title %></title>
     <meta name="csrf-token" content="<%= csrfToken %>">
     <style>
-        body {
+        /* body {
             margin: 0;
             display: flex;
             justify-content: center;
@@ -67,20 +67,22 @@
         }
         .submit-btn:hover {
             background-color: #0069d9;
-        }
+        } */
     </style>
-    
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styleCreateSession.css">
 </head>
 <body>
+    <%- include('sidebar.ejs') %>
     <div class="container">
+        <h1> Create Your Session </h1>
+        <p>Please fill all the fields in this form.</p>
         <form action="/sport/<%= sportId %>/createSession" method="post">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <% if (sessionItem != null) { %>
                 <input type="hidden" name="sessionId" value="<%= sessionItem.id %>">
             <% } %>
             <input type="hidden" name="sportId" value="<%= sportId %>">
-            <h1> Create Your Session </h1>
-            <p>Please fill all the fields in this form.</p>
             <div class="form-group">
                 <label>When will this sport session be held?</label>
                 <input type="datetime-local" name="dueDate" required <% if (sessionItem != null) { %>value="<%= new Date(sessionItem.dueDate).toISOString().slice(0, 16)  %>"<% } %>>
