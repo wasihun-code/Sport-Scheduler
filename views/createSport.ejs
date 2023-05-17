@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/stylecreateSport.css">
     <link rel="stylesheet" href="/css/styles.css">
@@ -12,6 +13,7 @@
        <%- include('sidebar.ejs') %>      
         <div class="sport-form">
             <form action="/createSport" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <h2 class="form-title"><%= title %></h2>
                 <% if (sport) { %>
                     <input type="hidden" name="sportId" value="<%= sport.id %>">
@@ -48,3 +50,4 @@
     </div>
   </body>
 </html>
+func

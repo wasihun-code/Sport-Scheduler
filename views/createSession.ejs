@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title><%= title %></title>
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <style>
         body {
             margin: 0;
@@ -73,6 +74,7 @@
 <body>
     <div class="container">
         <form action="/sport/<%= sportId %>/createSession" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <% if (sessionItem != null) { %>
                 <input type="hidden" name="sessionId" value="<%= sessionItem.id %>">
             <% } %>

@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async update_players(players, organizer, sessionId) {
+    static async update_players(players, sessionId) {
       await this.destroy({
         where: {
           sessionId,
@@ -42,10 +42,6 @@ module.exports = (sequelize, DataTypes) => {
           name,
           sessionId,
         });
-      });
-      this.create({
-        name: organizer,
-        sessionId,
       });
     }
 

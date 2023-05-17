@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <title>
         <%= title %>
     </title>
@@ -290,14 +291,20 @@
         
 </div>
 
-    <script>        
+    <script>
+        var token = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content")        
         function removePlayer(sportId, sessionId, playerId) {
             console.log('removePlayer() called')
             fetch(`/sport/${sportId}/editSession/${sessionId}/deletePlayer/player/${Number(playerId)}`, {
                 method: "post",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
             }).then((res) => {
                 if (res.ok) {
                     console.log("Delete OKkkkkkkkkkay")
@@ -310,8 +317,11 @@
             fetch(`/sport/${sportId}/editSession/deleteSession/${Number(sessionId)}`, {
                 method: "post",
                 headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+                    "_csrf": token
+                })
             }).then((res) => {
                 if (res.ok) {
                     window.location.href = `/sport/${Number(sportId)}/`;
@@ -322,8 +332,11 @@
             fetch(`/sport/${Number(sportId)}/createSession/${Number(sessionId)}/leave/${Number(userId)}`, {
                 method: "post",
                 headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
                 },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
             }).then((res) => {
                 if (res.ok) {
                 console.log("Toggling Player OKkkkkkkkkkay")
@@ -336,8 +349,11 @@
             fetch(`/sport/${Number(sportId)}/createSession/${Number(sessionId)}/join/${Number(userId)}`, {
                 method: "post",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
             }).then((res) => {
                 if (res.ok) {
                     console.log("Toggling Player OKkkkkkkkkkay")

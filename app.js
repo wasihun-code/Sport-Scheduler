@@ -7,13 +7,18 @@
 /* eslint-disable no-console */
 const express = require('express');
 const path = require('path');
+const csrf = require('tiny-csrf');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bodyParser = require('body-parser');
 // eslint-disable-next-line no-unused-vars
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser('shh! some secret string'));
+app.use(csrf('this_should_be_32_character_long', ['POST', 'PUT', 'DELETE']));
+
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -32,7 +37,6 @@ const {
 
 const saltRounds = 10;
 const { sportsQuotes, signupErrorHandling } = require('./utility');
-
 // Passport Js Configuration
 app.use(flash());
 function requireAdministrator(req, res, next) {
@@ -102,9 +106,10 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-app.get('/signup', (request, response) => {
+app.get('/signup', (req, response) => {
   response.render('signup', {
     title: 'Signup',
+    csrfToken: req.csrfToken(),
   });
 });
 
@@ -159,7 +164,7 @@ app.post('/users', async (req, resp) => {
 });
 
 app.get('/login', (req, resp) => {
-  resp.render('login', { title: 'Login' });
+  resp.render('login', { title: 'Login', csrfToken: req.csrfToken() });
 });
 
 app.post(
@@ -177,6 +182,7 @@ app.get('/', (req, resp) => {
   const title = 'Sports Scheduler';
   resp.render('login', {
     title,
+    csrfToken: req.csrfToken(),
   });
 });
 
@@ -211,6 +217,7 @@ app.get(
       title: 'Create Sport',
       quotes: sportsQuotes,
       sport: null,
+      csrfToken: req.csrfToken(),
     });
   },
 );
@@ -225,6 +232,7 @@ app.get(
       title: 'Edit Sport',
       quotes: sportsQuotes,
       sport,
+      csrfToken: req.csrfToken(),
     });
   },
 );
@@ -265,7 +273,7 @@ app.get(
     const joined_sessions = await Session.joined_session(sportId, player_sessions_id);
     const canceled_sessions = await Session.canceled_sessions(sportId);
     // eslint-disable-next-line no-restricted-syntax
-    resp.render('sport', { sport, past_sessions, current_sessions_others, current_user_sessions, joined_sessions, canceled_sessions, userisadmin });
+    resp.render('sport', { sport, csrfToken: req.csrfToken(), past_sessions, current_sessions_others, current_user_sessions, joined_sessions, canceled_sessions, userisadmin });
   },
 );
 
@@ -278,6 +286,7 @@ app.get(
       sessionItem: null,
       players: null,
       sportId: req.params.sportId,
+      csrfToken: req.csrfToken(),
     });
   },
 );
@@ -291,26 +300,25 @@ app.get(
     const sessionItem = await Session.findByPk(sessionId);
     const playersList = await PlayersName.findAll({ where: { sessionId } });
     const players = playersList.map((player) => player.name).join(',');
-    resp.render('createSession', { title, sessionItem, players, sportId });
+    resp.render('createSession', { title, csrfToken: req.csrfToken(), sessionItem, players, sportId });
   },
 );
 
 app.post('/sport/:sportId/createSession', async (req, resp) => {
   try {
     let sessionItem;
-    const { sessionId, sportId } = req.params;
-
+    const { sportId } = req.params;
     const { id } = req.user;
 
     // eslint-disable-next-line prefer-const
-    let { venue, num_players, dueDate, players } = req.body;
+    let { venue, num_players, dueDate, players, sessionId } = req.body;
     dueDate = new Date(req.body.dueDate); // Parse the HTML datetime-local string
 
     if (sessionId) {
       await
       Session.update_existing_session(dueDate, venue, num_players, sportId, id, sessionId);
-      await PlayersName.update_players(players, req.user.first_name, sessionId);
-      resp.redirect(`/sport/${sportId}/editSession/${id}`);
+      await PlayersName.update_players(players, sessionId);
+      resp.redirect(`/sport/${sportId}/editSession/${sessionId}`);
     } else {
       sessionItem = await Session.add_session(dueDate, venue, num_players, sportId, id);
       await PlayersName.add_players(players, req.user.first_name, sessionItem.id);
@@ -333,10 +341,10 @@ app.get(
       const user = await User.findByPk(Number(id));
       const playersList = await PlayersName.findAll({
         where: {
-          sessionId: sessionItem.id,
+          sessionId,
         },
       });
-      resp.render('editSession', { title, sessionItem, playersList, sportId, user });
+      resp.render('editSession', { title, csrfToken: req.csrfToken(), sessionItem, playersList, sportId, user });
     } catch (error) {
       console.log(error);
     }
@@ -352,7 +360,7 @@ app.get(
 
     try {
       const sessionItem = await Session.findByPk(Number(sessionId));
-      resp.render('cancelSession', { title, sessionItem, sportId });
+      resp.render('cancelSession', { title, csrfToken: req.csrfToken(), sessionItem, sportId });
     } catch (error) {
       console.log(error);
     }
@@ -398,9 +406,13 @@ app.post('/sport/:sportId/editSession/deleteSession/:sessionId', async (req, res
 
 app.post('/sport/deleteSport/:sportId', requireAdministrator, async (req, res) => {
   const { sportId } = req.params;
+  console.log('Inside post route for deleting session');
   try {
+    console.log('Before removing sport');
     await Sport.remove_sport(sportId);
+    console.log('After removing sport');
     res.redirect(302, '/listSports');
+    console.log('After redirecting');
   } catch (error) {
     console.log(error);
   }

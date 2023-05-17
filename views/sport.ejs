@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title><%= sport.title %></title>
+        <meta name="csrf-token" content="<%= csrfToken %>">
         <link rel="stylesheet" href="/css/styles.css">
         <style>
         .container {
@@ -104,17 +105,24 @@
         </div>
 
     <script>
+        var token = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content")
         function removeSport(sportId) {
-            fetch(
-                `/sport/deleteSport/${Number(sportId)}`, {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json"
-                }}
-            ).then((res) => {
+            console.log('removeSport() called')
+            fetch(`/sport/deleteSport/${Number(sportId)}`, {
+                method: "post",
+                headers: {
+                        "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
+            }).then((res) => {
+                if (res.ok) {
                 console.log("Fetch To delete Sport")
-                window.location.href = '/listSports'
-            })
+                window.location.href = '/listSports';
+            }}).catch((error) => console.log(error));
         }
     </script>
     </body>

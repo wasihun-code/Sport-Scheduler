@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <title>
         <%= title %>
     </title>
     
     <style>
-                html, body, div, span, applet, object, iframe,
+        html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
         a, abbr, acronym, address, big, cite, code,
         del, dfn, em, img, ins, kbd, q, s, samp,
@@ -182,6 +183,7 @@
         </div>
         <div class="register-form">
             <form action="/users" method="post" class="form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <h2 class="form-title">Create Account</h2>
               <div class="social-buttons">
                 <a href=""><img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/></a>
