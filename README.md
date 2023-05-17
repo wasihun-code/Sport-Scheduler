@@ -20,7 +20,7 @@ The application also includes authentication features, allowing users to sign up
 
 npm start
 
-3. Open your web browser and visit http://localhost:3000 to access the application.
+3. Open your web browser and visit http://localhost:5000 to access the application.
 
 4. Sign up or sign in to start managing sports and sessions.
    to be an admin you have to use the master password as 1234
@@ -33,7 +33,7 @@ npm start
 8. Explore the various features of the application and enjoy managing your sports and sessions efficiently.
 
 ## Demo
-
+https://sportscheduler-app-web-service.onrender.com/
 
 
 ## Live Demo
@@ -70,6 +70,9 @@ npm start
 
 
 ## Contact
-https://github.com/wasihun-code/
-https://www.linkedin.com/in/wasihun-ageru-9a7336196/
-wasihunageru7947@gmail.com
+
+You can reach out to me via the following channels:
+
+- GitHub: [wasihun-code](https://github.com/wasihun-code/)
+- LinkedIn: [Wasihun Ageru](https://www.linkedin.com/in/wasihun-ageru-9a7336196/)
+- Email: wasihunageru7947@gmail.com
